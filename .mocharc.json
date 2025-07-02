@@ -1,0 +1,6 @@
+{
+  "timeout": 5000,
+  "ui": "bdd",
+  "recursive": true,
+  "reporterEnabled": "spec, mocha-ctrf-json-reporter"
+} 

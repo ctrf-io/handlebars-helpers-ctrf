@@ -1,34 +1,14 @@
-# handlebars-helpers [![NPM version](https://img.shields.io/npm/v/handlebars-helpers.svg?style=flat)](https://www.npmjs.com/package/handlebars-helpers) [![NPM monthly downloads](https://img.shields.io/npm/dm/handlebars-helpers.svg?style=flat)](https://npmjs.org/package/handlebars-helpers)  [![NPM total downloads](https://img.shields.io/npm/dt/handlebars-helpers.svg?style=flat)](https://npmjs.org/package/handlebars-helpers) [![Linux Build Status](https://img.shields.io/travis/helpers/handlebars-helpers.svg?style=flat&label=Travis)](https://travis-ci.org/helpers/handlebars-helpers) [![Windows Build Status](https://img.shields.io/appveyor/ci/helpers/handlebars-helpers.svg?style=flat&label=AppVeyor)](https://ci.appveyor.com/project/helpers/handlebars-helpers)
+# handlebars-helpers-ctrf
 
-> More than 130 Handlebars helpers in ~20 categories. Helpers can be used with Assemble, Generate, Verb, Ghost, gulp-handlebars, grunt-handlebars, consolidate, or any node.js/Handlebars project.
-
-You might also be interested in [template-helpers](https://github.com/jonschlinkert/template-helpers).
-
-- [Install](#install)
-- [Browser usage](#browser-usage)
-- [Usage](#usage)
-- [Helpers](#helpers)
-- [Utils](#utils)
-- [History](#history)
-- [About](#about)
+Handlebars helpers for CTRF.
 
 ## Install
 
-Install with [npm](https://www.npmjs.com/):
+Install with npm:
 
 ```sh
-$ npm install --save handlebars-helpers
+$ npm install handlebars-helpers-ctrf
 ```
-
-Install with [yarn](https://yarnpkg.com):
-
-```sh
-$ yarn add handlebars-helpers
-```
-
-## Browser usage
-
-See how to [use handlebars-helpers in the browser](https://github.com/doowb/handlebars-helpers-browserify-example).
 
 ## Usage
 
@@ -37,53 +17,14 @@ The main export returns a function that needs to be called to expose the object 
 **Get all helpers**
 
 ```js
-var helpers = require('handlebars-helpers')();
-//=> returns object with all (130+) helpers
-```
-
-**Get a specific helper collection**
-
-Helper collections are exposed as getters, so only the helpers you want will be required and loaded.
-
-```js
-var helpers = require('handlebars-helpers');
-var math = helpers.math();
-//=> only the `math` helpers
-
-var helpers = require('handlebars-helpers');
-var array = helpers.array();
-//=> only the `collections` helpers
-```
-
-**Get multiple helpers collections**
-
-Helper collections are exposed as getters, so only the helpers you want will be required and loaded.
-
-```js
-var helpers = require('handlebars-helpers')(['math', 'string']);
-//=> only the `math` and `string` helpers
-```
-
-**Optionally pass your own handlebars**
-
-```js
-var handlebars = require('handlebars');
-var helpers = require('handlebars-helpers')({
-  handlebars: handlebars
-});
-
-// or for a specific collection
-var math = helpers.math({
-  handlebars: handlebars
-});
+require('handlebars-helpers-ctrf')({ handlebars })
 ```
 
 ## Helpers
 
 ## Categories
 
-Currently **189 helpers** in **20 categories**:
-
+* **[ctrf](#ctrf)** ([code](lib/ctrf.js) | [unit tests](test/ctrf.js))
 * **[array](#array)** ([code](lib/array.js) | [unit tests](test/array.js))
 * **[code](#code)** ([code](lib/code.js) | [unit tests](test/code.js))
 * **[collection](#collection)** ([code](lib/collection.js) | [unit tests](test/collection.js))
@@ -107,9 +48,15 @@ Currently **189 helpers** in **20 categories**:
 
 ## All helpers
 
+### [ctrf helpers](#ctrf)
+
+Visit the: [code](lib/ctrf.js) | [unit tests](test/ctrf.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+ctrf+helpers))
+
+
+
 ### [array helpers](#array)
 
-Visit the: [code](lib/array.js) | [unit tests](test/array.js) | [issues](https://github.com/helpers/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+array+helpers))
+Visit the: [code](lib/array.js) | [unit tests](test/array.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+array+helpers))
 
 * **[after](#after)** ([code](lib/array.js#L22) | [tests](test/array.js#L13))
 * **[arrayify](#arrayify)** ([code](lib/array.js#L39) | [tests](test/array.js#L29))
@@ -142,7 +89,7 @@ Visit the: [code](lib/array.js) | [unit tests](test/array.js) | [issues](https:/
 
 ### [code helpers](#code)
 
-Visit the: [code](lib/code.js) | [unit tests](test/code.js) | [issues](https://github.com/helpers/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+code+helpers))
+Visit the: [code](lib/code.js) | [unit tests](test/code.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+code+helpers))
 
 * **[embed](#embed)** ([code](lib/code.js#L23) | [tests](test/code.js#L10))
 * **[gist](#gist)** ([code](lib/code.js#L45) | [tests](test/code.js#L62))
@@ -150,14 +97,14 @@ Visit the: [code](lib/code.js) | [unit tests](test/code.js) | [issues](https://g
 
 ### [collection helpers](#collection)
 
-Visit the: [code](lib/collection.js) | [unit tests](test/collection.js) | [issues](https://github.com/helpers/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+collection+helpers))
+Visit the: [code](lib/collection.js) | [unit tests](test/collection.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+collection+helpers))
 
 * **[isEmpty](#isEmpty)** ([code](lib/collection.js#L31) | [tests](test/collection.js#L14))
 * **[iterate](#iterate)** ([code](lib/collection.js#L59) | [tests](test/collection.js#L68))
 
 ### [comparison helpers](#comparison)
 
-Visit the: [code](lib/comparison.js) | [unit tests](test/comparison.js) | [issues](https://github.com/helpers/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+comparison+helpers))
+Visit the: [code](lib/comparison.js) | [unit tests](test/comparison.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+comparison+helpers))
 
 * **[and](#and)** ([code](lib/comparison.js#L27) | [tests](test/comparison.js#L10))
 * **[compare](#compare)** ([code](lib/comparison.js#L57) | [tests](test/comparison.js#L41))
@@ -187,7 +134,7 @@ Visit the: [code](lib/comparison.js) | [unit tests](test/comparison.js) | [issue
 
 ### [date helpers](#date)
 
-Visit the: [code](lib/date.js) | [unit tests](test/date.js) | [issues](https://github.com/helpers/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+date+helpers))
+Visit the: [code](lib/date.js) | [unit tests](test/date.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+date+helpers))
 
 * **[year](#year)** ([code](lib/date.js#L15) | [no tests])
 * **[date](#date)** ([code](lib/date.js#Lundefined) | [no tests])
@@ -195,7 +142,7 @@ Visit the: [code](lib/date.js) | [unit tests](test/date.js) | [issues](https://g
 
 ### [fs helpers](#fs)
 
-Visit the: [code](lib/fs.js) | [unit tests](test/fs.js) | [issues](https://github.com/helpers/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+fs+helpers))
+Visit the: [code](lib/fs.js) | [unit tests](test/fs.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+fs+helpers))
 
 * **[fileSize](#fileSize)** ([code](lib/fs.js#L14) | [no tests])
 * **[read](#read)** ([code](lib/fs.js#L29) | [tests](test/fs.js#L16))
@@ -203,7 +150,7 @@ Visit the: [code](lib/fs.js) | [unit tests](test/fs.js) | [issues](https://githu
 
 ### [html helpers](#html)
 
-Visit the: [code](lib/html.js) | [unit tests](test/html.js) | [issues](https://github.com/helpers/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+html+helpers))
+Visit the: [code](lib/html.js) | [unit tests](test/html.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+html+helpers))
 
 * **[attr](#attr)** ([code](lib/html.js#L23) | [tests](test/html.js#L13))
 * **[css](#css)** ([code](lib/html.js#L45) | [tests](test/html.js#L21))
@@ -215,20 +162,20 @@ Visit the: [code](lib/html.js) | [unit tests](test/html.js) | [issues](https://g
 
 ### [i18n helpers](#i18n)
 
-Visit the: [code](lib/i18n.js) | [unit tests](test/i18n.js) | [issues](https://github.com/helpers/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+i18n+helpers))
+Visit the: [code](lib/i18n.js) | [unit tests](test/i18n.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+i18n+helpers))
 
 * **[i18n](#i18n)** ([code](lib/i18n.js#L18) | [tests](test/i18n.js#L11))
 
 ### [inflection helpers](#inflection)
 
-Visit the: [code](lib/inflection.js) | [unit tests](test/inflection.js) | [issues](https://github.com/helpers/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+inflection+helpers))
+Visit the: [code](lib/inflection.js) | [unit tests](test/inflection.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+inflection+helpers))
 
 * **[inflect](#inflect)** ([code](lib/inflection.js#L30) | [tests](test/inflection.js#L9))
 * **[ordinalize](#ordinalize)** ([code](lib/inflection.js#L58) | [tests](test/inflection.js#L22))
 
 ### [logging helpers](#logging)
 
-Visit the: [code](lib/logging.js) | [unit tests](test/logging.js) | [issues](https://github.com/helpers/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+logging+helpers))
+Visit the: [code](lib/logging.js) | [unit tests](test/logging.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+logging+helpers))
 
 * **[log](#log)** ([code](lib/logging.js#Lundefined) | [no tests])
 * **[ok](#ok)** ([code](lib/logging.js#Lundefined) | [no tests])
@@ -244,14 +191,14 @@ Visit the: [code](lib/logging.js) | [unit tests](test/logging.js) | [issues](htt
 
 ### [markdown helpers](#markdown)
 
-Visit the: [code](lib/markdown.js) | [unit tests](test/markdown.js) | [issues](https://github.com/helpers/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+markdown+helpers))
+Visit the: [code](lib/markdown.js) | [unit tests](test/markdown.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+markdown+helpers))
 
 * **[markdown](#markdown)** ([code](lib/markdown.js#Lundefined) | [tests](test/markdown.js#L10))
 * **[md](#md)** ([code](lib/markdown.js#L55) | [tests](test/markdown.js#L18))
 
 ### [match helpers](#match)
 
-Visit the: [code](lib/match.js) | [unit tests](test/match.js) | [issues](https://github.com/helpers/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+match+helpers))
+Visit the: [code](lib/match.js) | [unit tests](test/match.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+match+helpers))
 
 * **[match](#match)** ([code](lib/match.js#L23) | [tests](test/match.js#L13))
 * **[isMatch](#isMatch)** ([code](lib/match.js#L47) | [tests](test/match.js#L61))
@@ -259,7 +206,7 @@ Visit the: [code](lib/match.js) | [unit tests](test/match.js) | [issues](https:/
 
 ### [math helpers](#math)
 
-Visit the: [code](lib/math.js) | [unit tests](test/math.js) | [issues](https://github.com/helpers/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+math+helpers))
+Visit the: [code](lib/math.js) | [unit tests](test/math.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+math+helpers))
 
 * **[abs](#abs)** ([code](lib/math.js#L15) | [no tests])
 * **[add](#add)** ([code](lib/math.js#L31) | [tests](test/math.js#L10))
@@ -280,7 +227,7 @@ Visit the: [code](lib/math.js) | [unit tests](test/math.js) | [issues](https://g
 
 ### [misc helpers](#misc)
 
-Visit the: [code](lib/misc.js) | [unit tests](test/misc.js) | [issues](https://github.com/helpers/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+misc+helpers))
+Visit the: [code](lib/misc.js) | [unit tests](test/misc.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+misc+helpers))
 
 * **[frame](#frame)** ([code](lib/misc.js#L11) | [no tests])
 * **[option](#option)** ([code](lib/misc.js#L26) | [tests](test/misc.js#L20))
@@ -290,7 +237,7 @@ Visit the: [code](lib/misc.js) | [unit tests](test/misc.js) | [issues](https://g
 
 ### [number helpers](#number)
 
-Visit the: [code](lib/number.js) | [unit tests](test/number.js) | [issues](https://github.com/helpers/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+number+helpers))
+Visit the: [code](lib/number.js) | [unit tests](test/number.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+number+helpers))
 
 * **[bytes](#bytes)** ([code](lib/number.js#L24) | [tests](test/number.js#L10))
 * **[addCommas](#addCommas)** ([code](lib/number.js#L61) | [tests](test/number.js#L84))
@@ -304,7 +251,7 @@ Visit the: [code](lib/number.js) | [unit tests](test/number.js) | [issues](https
 
 ### [object helpers](#object)
 
-Visit the: [code](lib/object.js) | [unit tests](test/object.js) | [issues](https://github.com/helpers/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+object+helpers))
+Visit the: [code](lib/object.js) | [unit tests](test/object.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+object+helpers))
 
 * **[extend](#extend)** ([code](lib/object.js#L18) | [tests](test/object.js#L15))
 * **[forIn](#forIn)** ([code](lib/object.js#L55) | [tests](test/object.js#L33))
@@ -323,7 +270,7 @@ Visit the: [code](lib/object.js) | [unit tests](test/object.js) | [issues](https
 
 ### [path helpers](#path)
 
-Visit the: [code](lib/path.js) | [unit tests](test/path.js) | [issues](https://github.com/helpers/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+path+helpers))
+Visit the: [code](lib/path.js) | [unit tests](test/path.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+path+helpers))
 
 * **[absolute](#absolute)** ([code](lib/path.js#L20) | [tests](test/path.js#L13))
 * **[dirname](#dirname)** ([code](lib/path.js#L40) | [tests](test/path.js#L25))
@@ -336,14 +283,14 @@ Visit the: [code](lib/path.js) | [unit tests](test/path.js) | [issues](https://g
 
 ### [regex helpers](#regex)
 
-Visit the: [code](lib/regex.js) | [unit tests](test/regex.js) | [issues](https://github.com/helpers/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+regex+helpers))
+Visit the: [code](lib/regex.js) | [unit tests](test/regex.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+regex+helpers))
 
 * **[toRegex](#toRegex)** ([code](lib/regex.js#L19) | [no tests])
 * **[test](#test)** ([code](lib/regex.js#L42) | [no tests])
 
 ### [string helpers](#string)
 
-Visit the: [code](lib/string.js) | [unit tests](test/string.js) | [issues](https://github.com/helpers/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+string+helpers))
+Visit the: [code](lib/string.js) | [unit tests](test/string.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+string+helpers))
 
 * **[append](#append)** ([code](lib/string.js#L22) | [no tests])
 * **[camelcase](#camelcase)** ([code](lib/string.js#L41) | [tests](test/string.js#L10))
@@ -384,7 +331,7 @@ Visit the: [code](lib/string.js) | [unit tests](test/string.js) | [issues](https
 
 ### [url helpers](#url)
 
-Visit the: [code](lib/url.js) | [unit tests](test/url.js) | [issues](https://github.com/helpers/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+url+helpers))
+Visit the: [code](lib/url.js) | [unit tests](test/url.js) | [issues](https://github.com/ctrf-io/handlebars-helpers/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+url+helpers))
 
 * **[encodeURI](#encodeURI)** ([code](lib/url.js#L19) | [tests](test/url.js#L31))
 * **[escape](#escape)** ([code](lib/url.js#L34) | [no tests])
@@ -1406,6 +1353,11 @@ Get the current year.
 
 Use [moment](http://momentjs.com) as a helper. See [helper-date](https://github.com/helpers/helper-date) for more details.
 
+```handlebars
+{{date "5 years ago" "YYYY"}}
+//=> 2010
+```
+
 ## fs
 
 ### [{{read}}](lib/fs.js#L29)
@@ -1603,7 +1555,21 @@ Returns an ordinalized number as a string.
 
 ## logging
 
-[logging-helpers](https://github.com/helpers/logging-helpers).
+Log messages to the console.
+
+```handlebars
+{{log "%s" "this is a message"}}
+{{info "%s" "this is a message"}}
+{{warning "%s" "this is a message"}}
+{{warn "%s" "this is a message"}}  <!-- alias for "warning" -->
+{{success "%s" "this is a message"}}
+{{error "%s" "this is a message"}}
+{{danger "%s" "this is a message"}}  <!-- alias for "error" -->
+{{ok "%s" "this is a message"}}
+{{bold "%s" "this is a message"}}
+{{_debug this}}
+{{_inspect foo.bar}}
+```
 
 ## markdown
 
@@ -3079,270 +3045,35 @@ Generate a random number
 
 ***
 
-## History
-
-## [v0.10.0](https://github.com/helpers/handlebars-helpers/compare/v0.9.0...v0.10.0) - 2017-11-17
-
-**changes**
-
-* adds `unique` to array helpers
-* updates `css` helper to ensure that path.join() is not called on an absolute URL.
-
-## [v0.9.0](https://github.com/helpers/handlebars-helpers/compare/v0.8.4...v0.9.0) - 2017-07-03
-
-**changes**
-
-* all unit tests now use assert instead of should
-* remove `fileSize` helper in favor of new `bytes` helper, which does the same thing, but returns `B` instead of `byte` or `bytes`.
-* JSONParse helper is no longer a block helper. It now returns an object, which can be used as a subexpression to achieve the same behavior as before.
-* adds better error handling for path helpers, since node.js errors are terrible. We have a better way to handle errors that will be implemented in a near future release.
-* adds inline helper support to `isEmpty`, so it can now be used as an inline or block helper
-* adds `raw` helper
-* adds regex helpers
-* adds inline helper support to most of the comparison helpers, so they can now be used as inline or block helpers
-* adds `pluck` helper to array helpers
-* adds `prepend` and `append` helpers to string helpers
-* adds `isTruthy` and `isFalsey` comparison helpers
-* adds `escape` and `url_encode` and `url_decode` URL helpers
-* adds `attr` helper to html helpers
-* adds `year` helper to date helpers
-* adds `typeOf` and `frame` helpers to misc helpers
-* adds `abs`, `minus`, `modulo`, `plus`, `times` to math helpers
-* moves `ellipsis` helper from `html` helpers to string helpers
-* moves `truncate` helper from `html` helpers to string helpers
-* moves `reverse` helper from `string` helpers to array helpers
-* differentiate `eq` and `is` helpers so that `eq` is strict equality and `is` is not
-* removes `mm` helper, use `match` instead
-
-## [v0.8.4](https://github.com/helpers/handlebars-helpers/compare/v0.8.3...v0.8.4) - 2017-07-03
-
-**changes**
-
-* removes strlen helper in favor of fixing the length helper
-
-## [v0.8.3](https://github.com/helpers/handlebars-helpers/compare/v0.8.2...v0.8.3) - 2017-07-03
-
-**changes**
-
-* adds strlen helper
-* adds itemAt helper
-* clean up code comments for array helpers
-
-## [v0.8.2](https://github.com/helpers/handlebars-helpers/compare/v0.8.1...v0.8.2) - 2017-03-30
-
-**changes**
-
-* documentation updates
-* fixes md helper to use sync by default
-
-## [v0.8.1](https://github.com/helpers/handlebars-helpers/compare/v0.8.0...v0.8.1) - 2017-03-30
-
-**changes**
-
-* fixes sorting in withSort helper. see https://github.com/helpers/handlebars-helpers/pull/245
-* adds toPath helper
-* handle null inputs in number helpers
-* adds stripProtocol helper
-
-## [v0.8.0](https://github.com/helpers/handlebars-helpers/compare/v0.7.6...v0.8.0) - 2017-01-25
-
-**changes**
-
-* handle string arguments in list helpers
-* adds JSONParse helper as an alias for parseJSON
-
-## [v0.7.6](https://github.com/helpers/handlebars-helpers/compare/v0.7.0...v0.7.6) - 2017-01-08
-
-**changes**
-
-* fixes markdown helpers. see https://github.com/helpers/handlebars-helpers/pull/226
-* documentation improvements and other minor fixes
-
-## [v0.7.0](https://github.com/helpers/handlebars-helpers/compare/v0.6.0...v0.7.0) - 2016-07-16
-
-**changes**
-
-* The [or](#or) helper can now take a variable number of arguments
-
-## [v0.6.0](https://github.com/helpers/handlebars-helpers/compare/v0.3.3...v0.6.0) - 2016-05-13
-
-**changes**
-
-* the main export is now a function that takes a name or array of names of helper types to load. Example `helpers(['string', 'array'])` will load only the `string` and `array` helpers
-* helper types can alternatively be accessed as methods. example - `helpers.path()` will return all of the path helpers.
-* handlebars may be provided by the user. if not provided it will fall back to the `handlebars-helpers`  handlebars
-* helpers are now as generic as possible, with little to no code related to assemble, grunt, etc.
-* helpers are lazy-loaded using getters for improved performance
-* Once tests are added for the `md` and `markdown` helpers, we'll have 100% unit test coverage on helpers
-
-## [v0.3.3](https://github.com/helpers/handlebars-helpers/compare/v0.3.2...v0.3.3) - 2013-09-03
-
-**changes**
-
-* Adds fileSize helper.
-* Adds startsWith helper.
-
-## [v0.3.2](https://github.com/helpers/handlebars-helpers/compare/v0.3.0...v0.3.2) - 2013-08-20
-
-**changes**
-
-* Adds glob helper.
-
-## [v0.3.0](https://github.com/helpers/handlebars-helpers/compare/v0.2.4...v0.3.0) - 2013-07-30
-
-**changes**
-
-* The project has been refactored, cleaned up, and full documentation has bee put up at http://assemble.io
-
-## [v0.2.4](https://github.com/helpers/handlebars-helpers/compare/v0.2.3...v0.2.4) - 2013-05-11
-
-**changes**
-
-* Adding object globbing utility functions to be used in helpers later.
-
-## [v0.2.3](https://github.com/helpers/handlebars-helpers/compare/v0.2.0...v0.2.3) - 2013-05-11
-
-**changes**
-
-* File globbing added to some helpers. Including md and some file helpers.
-
-## [v0.2.0](https://github.com/helpers/handlebars-helpers/compare/v0.1.32...v0.2.0) - 2013-05-07
-
-**changes**
-
-* A bunch of new tests for markdown and special helpers.
-* Refactored most of the rest of the helpers to separate functions from Handlebars registration.
-
-## [v0.1.32](https://github.com/helpers/handlebars-helpers/compare/v0.1.31...v0.1.32) - 2013-05-02
-
-**changes**
-
-* Updates utils and a number of helpers, including value, property, and stringify.
-
-## [v0.1.31](https://github.com/helpers/handlebars-helpers/compare/v0.1.30...v0.1.31) - 2013-04-21
-
-**changes**
-
-* Fixes relative helper
-
-## [v0.1.30](https://github.com/helpers/handlebars-helpers/compare/v0.1.25...v0.1.30) - 2013-04-20
-
-**changes**
-
-* Refactoring helpers-collection module to separate the functions from the Handlebars helper registration process.
-
-## [v0.1.25](https://github.com/helpers/handlebars-helpers/compare/v0.1.21...v0.1.25) - 2013-04-16
-
-**changes**
-
-* Adding defineSection and renderSection helpers to try to get sections populated in a layout from the page.
-
-## [v0.1.21](https://github.com/helpers/handlebars-helpers/compare/v0.1.20...v0.1.21) - 2013-04-07
-
-**changes**
-
-* Add markdown helpers back, add more tests.
-
-## [v0.1.20](https://github.com/helpers/handlebars-helpers/compare/v0.1.11...v0.1.20) - 2013-04-06
-
-**changes**
-
-* Generalized helpers structure, externalized utilities.
-
-## [v0.1.11](https://github.com/helpers/handlebars-helpers/compare/v0.1.10...v0.1.11) - 2013-04-05
-
-**changes**
-
-* New authors and gist helpers, general cleanup and new tests.
-
-## [v0.1.10](https://github.com/helpers/handlebars-helpers/compare/v0.1.8...v0.1.10) - 2013-04-04
-
-**changes**
-
-* Externalized utility javascript from helpers.js
-
-## [v0.1.8](https://github.com/helpers/handlebars-helpers/compare/v0.1.7...v0.1.8) - 2013-03-28
-
-**changes**
-
-* Gruntfile updated with mocha tests for 71 helpers, bug fixes.
-
-## [v0.1.7](https://github.com/helpers/handlebars-helpers/compare/v0.1.3...v0.1.7) - 2013-03-18
-
-**changes**
-
-* New path helper 'relative', for resolving relative path from one absolute path to another.
-
-## [v0.1.3](https://github.com/helpers/handlebars-helpers/compare/v0.1.2...v0.1.3) - 2013-03-16
-
-**changes**
-
-* New helpers, 'formatPhoneNumber' and 'eachProperty'
-
-## [v0.1.2](https://github.com/helpers/handlebars-helpers/compare/v0.1.0...v0.1.2) - 2013-03-15
-
-**changes**
-
-* Update README.md with documentation, examples.
-
-## [v0.1.0] - 2013-03-06
-
-**changes**
-
-* First commit.
-
-## About
-
-### Related projects
-
-* [assemble](https://www.npmjs.com/package/assemble): Get the rocks out of your socks! Assemble makes you fast at creating web projects… [more](https://github.com/assemble/assemble) | [homepage](https://github.com/assemble/assemble "Get the rocks out of your socks! Assemble makes you fast at creating web projects. Assemble is used by thousands of projects for rapid prototyping, creating themes, scaffolds, boilerplates, e-books, UI components, API documentation, blogs, building websit")
-* [template-helpers](https://www.npmjs.com/package/template-helpers): Generic JavaScript helpers that can be used with any template engine. Handlebars, Lo-Dash, Underscore, or… [more](https://github.com/jonschlinkert/template-helpers) | [homepage](https://github.com/jonschlinkert/template-helpers "Generic JavaScript helpers that can be used with any template engine. Handlebars, Lo-Dash, Underscore, or any engine that supports helper functions.")
-* [utils](https://www.npmjs.com/package/utils): Fast, generic JavaScript/node.js utility functions. | [homepage](https://github.com/jonschlinkert/utils "Fast, generic JavaScript/node.js utility functions.")
-
-### Contributing
-
-Pull requests and stars are always welcome. For bugs and feature requests, [please create an issue](../../issues/new).
-
-### Contributors
-
-### Release history
-
-### Building docs
-
-_(This project's readme.md is generated by [verb](https://github.com/verbose/verb-generate-readme), please don't edit the readme directly. Any changes to the readme must be made in the [.verb.md](.verb.md) readme template.)_
-
-To generate the readme, run the following command:
+## Development
 
 ```sh
-$ npm install -g verbose/verb#dev verb-generate-readme && verb
+# Install dependencies
+npm install
+
+# Run tests
+npm test
+
+# Run tests with coverage
+npm run test:coverage
+
+# Run linting
+npm run lint
+
+# Fix linting issues
+npm run lint:fix
+
+# Format code
+npm run format
+
+# Check for security issues
+npm run security
 ```
 
-### Running tests
+## Notes
 
-Running and reviewing unit tests is a great way to get familiarized with a library and its API. You can install dependencies and run tests with the following command:
+This is a fork of [handlebars-helpers](https://github.com/ctrf-io/handlebars-helpers) with additional CTRF functionality.
 
-```sh
-$ npm install && npm test
-```
+## License
 
-### Author
-
-**Brian Woodward**
-
-* [github/doowb](https://github.com/doowb)
-* [twitter/doowb](https://twitter.com/doowb)
-
-**Jon Schlinkert**
-
-* [github/jonschlinkert](https://github.com/jonschlinkert)
-* [twitter/jonschlinkert](https://twitter.com/jonschlinkert)
-
-### License
-
-Copyright © 2017, [Jon Schlinkert](https://github.com/jonschlinkert).
-When this project was created some helpers were sourced from [Swag, by Elving Rodriguez](http://elving.github.com/swag/).
-Released under the [MIT License](LICENSE).
-
-***
-
-_This file was generated by [verb-generate-readme](https://github.com/verbose/verb-generate-readme), v0.6.0, on November 17, 2017._
+MIT © [Original handlebars-helpers authors and contributors](https://github.com/ctrf-io/handlebars-helpers) and [CTRF authors and contributors](https://ctrf.io)
