@@ -7,8 +7,8 @@
 
 'use strict';
 
-var forIn = require('for-in');
-var define = require('define-property');
+var forIn = require('./lib/utils/for-in');
+var define = require('./lib/utils/define-property');
 var lib = require('./lib/');
 
 /**

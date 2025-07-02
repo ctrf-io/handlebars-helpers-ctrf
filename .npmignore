@@ -1,0 +1,22 @@
+# Directories
+.github/
+coverage/
+docs/
+test/
+dist/
+
+# Files
+.editorconfig
+.eslintignore
+.eslintrc.json
+.gitattributes
+.gitignore
+.npmrc
+.nyc_output
+.prettierignore
+.travis.yml
+.vscode
+*.tgz
+*.log
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md 

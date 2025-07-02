@@ -5,7 +5,19 @@ var assert = require('assert');
 var fs = require('fs');
 var hbs = require('handlebars').create();
 var helpers = require('..');
-helpers.markdown({handlebars: hbs});
+
+// Directly register the markdown helpers
+var markdown = require('../lib/markdown');
+hbs.registerHelper('markdown', function(options) {
+  if (typeof options === 'string') {
+    return markdown.markdown(options);
+  }
+  return markdown.markdown(options);
+});
+
+hbs.registerHelper('md', function(fp, options) {
+  return markdown.md(fp, options);
+});
 
 describe('markdown', function() {
   describe('markdown', function() {
