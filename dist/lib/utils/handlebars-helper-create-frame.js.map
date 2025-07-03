@@ -1,0 +1,1 @@
+{"version":3,"file":"handlebars-helper-create-frame.js","sourceRoot":"","sources":["../../../src/lib/utils/handlebars-helper-create-frame.ts"],"names":[],"mappings":"AACA,OAAO,EAAE,WAAW,EAAE,MAAM,YAAY,CAAC;AAEzC;;GAEG;AACH,MAAM,UAAU,KAAK,CAAY,OAAgC;IAC/D,WAAW,CAAC,OAAO,EAAE,OAAO,CAAC,IAAI,CAAC,CAAC;IACnC,OAAO,OAAO,CAAC,EAAE,CAAC,IAAI,CAAC,CAAC;AAC1B,CAAC;AAED,eAAe,KAAK,CAAC"}

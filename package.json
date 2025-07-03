@@ -1,7 +1,7 @@
 {
   "name": "handlebars-helpers-ctrf",
   "description": "Handlebars helpers to be used with CTRF libraries.",
-  "version": "0.0.3",
+  "version": "0.0.4-next.5",
   "homepage": "https://ctrf.io",
   "author": "Matthew Thomas",
   "contributors": [
@@ -13,25 +13,37 @@
     "url": "https://github.com/mattthomas-info/handlebars-helpers-ctrf/issues"
   },
   "license": "MIT",
+  "type": "module",
   "files": [
-    "index.js",
-    "lib",
-    "scripts",
+    "dist",
+    "src",
     "THIRD_PARTY_LICENSES"
   ],
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "engines": {
     "node": ">=20.0.0"
   },
   "scripts": {
-    "test": "mocha \"test/**/*.js\"",
-    "test:coverage": "nyc mocha \"test/**/*.js\"",
-    "test:all": "mocha",
-    "lint": "eslint . || true",
-    "lint:fix": "eslint . --fix || true",
-    "format": "prettier --write \"**/*.js\"",
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "test": "npm run build && mocha \"dist/test/**/*.js\"",
+    "test:coverage": "nyc mocha \"dist/test/**/*.js\"",
+    "test:all": "npm run build && mocha dist/test",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
     "security": "npm audit || true",
-    "build": "npm run lint && npm test && npm run security"
+    "prepublish": "npm run build",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "date.js": "^0.3.3",
@@ -44,6 +56,13 @@
     "striptags": "^3.2.0"
   },
   "devDependencies": {
+    "@types/handlebars": "^4.1.0",
+    "@types/marked": "^4.0.8",
+    "@types/micromatch": "^4.0.2",
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.10.6",
+    "@typescript-eslint/eslint-plugin": "^6.19.0",
+    "@typescript-eslint/parser": "^6.19.0",
     "decache": "^4.6.2",
     "eslint": "^8.56.0",
     "fs-exists-sync": "^0.1.0",
@@ -57,7 +76,8 @@
     "mocha-multi-reporters": "^1.5.1",
     "nyc": "^15.1.0",
     "prettier": "^3.1.1",
-    "should": "^13.2.3"
+    "should": "^13.2.3",
+    "typescript": "^5.3.3"
   },
   "resolutions": {
     "lodash.template": "^4.5.0",
@@ -67,5 +87,9 @@
     "nanoid": "^3.3.7"
   },
   "keywords": [
+    "handlebars",
+    "helpers",
+    "typescript",
+    "ctrf"
   ]
 }

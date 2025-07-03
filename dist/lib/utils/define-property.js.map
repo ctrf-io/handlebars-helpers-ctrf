@@ -1,0 +1,1 @@
+{"version":3,"file":"define-property.js","sourceRoot":"","sources":["../../../src/lib/utils/define-property.ts"],"names":[],"mappings":"AAAA;;GAEG;AACH,MAAM,UAAU,cAAc,CAC5B,MAAS,EACT,GAAW,EACX,KAAU;IAEV,MAAM,CAAC,cAAc,CAAC,MAAM,EAAE,GAAG,EAAE;QACjC,KAAK;QACL,QAAQ,EAAE,IAAI;QACd,UAAU,EAAE,KAAK;QACjB,YAAY,EAAE,IAAI;KACnB,CAAC,CAAC;AACL,CAAC"}
