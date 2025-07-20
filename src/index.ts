@@ -48,22 +48,22 @@ registry.loadHandlebars(Handlebars);
  */
 export { registry, HelperRegistry };
 
+export * from "./helpers/array";
 /**
  * Exports all helpers.
  */
 export * from "./helpers/collections";
+export * from "./helpers/collections";
+export * from "./helpers/comparison";
+export * from "./helpers/date";
 // export * from "./helpers/ctrf";
 export * from "./helpers/fs";
-export * from "./helpers/inflection";
-export * from "./helpers/match";
-export * from "./helpers/number";
-export * from "./helpers/url";
-export * from "./helpers/date";
-export * from "./helpers/comparison";
-export * from "./helpers/array";
-export * from "./helpers/collections";
 export * from "./helpers/fs";
 export * from "./helpers/inflection";
+export * from "./helpers/inflection";
+export * from "./helpers/match";
 export * from "./helpers/match";
 export * from "./helpers/math";
 export * from "./helpers/misc";
+export * from "./helpers/number";
+export * from "./helpers/url";
