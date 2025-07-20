@@ -1,0 +1,60 @@
+{
+	"name": "handlebars-helpers-ctrf",
+	"version": "0.0.4-next.6",
+	"description": "",
+	"type": "module",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"engines": {
+		"node": ">=20.19.0"
+	},
+	"scripts": {
+		"build": "tsc",
+		"postbuild": "node scripts/esm-compatibility.js",
+		"test": "jest",
+		"test:watch": "jest --watch",
+		"test:coverage": "jest --coverage",
+		"test:ctrf": "jest src/helpers/__tests__/ctrf.test.ts",
+		"test:string": "jest src/helpers/__tests__/string.test.ts",
+		"test:registry": "jest src/__tests__/helper-registry.test.ts",
+		"test:integration": "jest src/__tests__/integration.test.ts",
+		"test:helpers": "tsx src/test-runner.ts",
+		"lint": "biome check .",
+		"lint:fix": "biome check . --write src/helpers/string.ts",
+		"dev:helpers": "tsx --watch src/test-runner.ts",
+		"docs": "typedoc",
+		"docs:watch": "typedoc --watch",
+		"docs:readme": "typedoc --plugin typedoc-plugin-markdown --out ./temp-docs && node scripts/update-readme.js"
+	},
+	"files": [
+		"dist/",
+		"types/",
+		"README.md"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/ctrf-io/handlebars-helpers-ctrf"
+	},
+	"homepage": "https://ctrf.io",
+	"author": "Matthew Thomas",
+	"license": "MIT",
+	"dependencies": {
+		"ctrf": "^0.0.13-next.0",
+		"handlebars": "^4.7.8",
+		"minimatch": "^10.0.3"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.1.1",
+		"@types/jest": "^30.0.0",
+		"@types/node": "^20.12.7",
+		"globals": "^16.3.0",
+		"jest": "^30.0.4",
+		"jest-ctrf-json-reporter": "^0.0.9",
+		"jest-environment-node": "^30.0.4",
+		"ts-jest": "^29.4.0",
+		"tsx": "^4.19.2",
+		"typedoc": "^0.28.7",
+		"typedoc-plugin-markdown": "^4.7.0",
+		"typescript": "^5.8.3"
+	}
+}

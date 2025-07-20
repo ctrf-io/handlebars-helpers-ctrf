@@ -1,0 +1,19 @@
+{
+	"entryPoints": ["./src/index.ts"],
+	"out": "./docs",
+	"theme": "default",
+	"includeVersion": true,
+	"excludePrivate": true,
+	"excludeProtected": true,
+	"excludeInternal": true,
+	"readme": "README.md",
+	"name": "Handlebars CTRF",
+	"tsconfig": "./tsconfig.json",
+	"plugin": ["typedoc-plugin-markdown"],
+	"githubPages": false,
+	"disableSources": false,
+	"categorizeByGroup": true,
+	"defaultCategory": "Other",
+	"categoryOrder": ["Helpers", "*"],
+	"exclude": ["src/helper-registry.ts"]
+}

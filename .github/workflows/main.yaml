@@ -1,0 +1,40 @@
+name: build-and-test
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+  testing:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Install dependencies
+      run: npm install
+    - name: Build
+      run: npm run build
+    - name: lint
+      run: npm run lint
+    - name: Test
+      run: npm run test
+    - name: Publish Test Report
+      uses: ctrf-io/github-test-reporter@v1
+      with:
+        report-path: './ctrf/*.json'
+        github-report: true
+        failed-report: true
+        flaky-report: true
+        insights-report: true
+        fail-rate-report: true
+        flaky-rate-report: true
+        slowest-report: true
+        previous-results-report: true
+        upload-artifact: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: always()

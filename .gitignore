@@ -1,0 +1,25 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# node_modules
+node_modules/
+
+# Documentation
+docs/
+temp-docs/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Coverage  
+coverage/
+
+# Test reports
+ctrf/
+test-data/
