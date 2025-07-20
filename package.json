@@ -1,6 +1,6 @@
 {
 	"name": "handlebars-helpers-ctrf",
-	"version": "0.0.4-next.6",
+	"version": "0.0.4-next.7",
 	"description": "",
 	"type": "module",
 	"main": "dist/index.js",
