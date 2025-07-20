@@ -8,6 +8,8 @@ export interface HandlebarsInstance {
 	helpers: Record<string, unknown>;
 }
 
+export type Handlebars = HandlebarsInstance;
+
 /**
  * Describes a filter for selecting helpers by name or category.
  */
@@ -93,7 +95,25 @@ export class HelperRegistry {
 	 * Loads all registered helpers into a Handlebars instance.
 	 * @param handlebars - The Handlebars instance.
 	 */
-	public loadHandlebars(handlebars: HandlebarsInstance) {
+	public loadHandlebars(
+		handlebars:
+			| HandlebarsInstance
+			| {
+					registerHelper: (
+						name: string,
+						fn: (...args: unknown[]) => unknown,
+					) => void;
+			  },
+	) {
+		// Type guard to ensure handlebars has the required methods
+		if (typeof handlebars !== "object" || handlebars === null) {
+			throw new Error("Handlebars instance must be an object");
+		}
+
+		if (typeof handlebars.registerHelper !== "function") {
+			throw new Error("Handlebars instance must have a registerHelper method");
+		}
+
 		for (const helper of this._helpers) {
 			handlebars.registerHelper(helper.name, helper.fn);
 		}

@@ -44,6 +44,16 @@ registry.registerHelpers([
 registry.loadHandlebars(Handlebars);
 
 /**
+ * load helpers into Handlebars instance.
+ * @param handlebarsInstance - The Handlebars instance to load helpers into
+ */
+export function loadHelpers(handlebarsInstance: {
+	registerHelper: (name: string, fn: (...args: unknown[]) => unknown) => void;
+}) {
+	registry.loadHandlebars(handlebarsInstance);
+}
+
+/**
  * Exports the default helper registry and the HelperRegistry class.
  */
 export { registry, HelperRegistry };

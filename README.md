@@ -12,9 +12,11 @@ npm install handlebars-helpers-ctrf
 
 ```javascript
 import Handlebars from 'handlebars'
-import { registry } from 'handlebars-helpers-ctrf';
+import { loadHelpers } from 'handlebars-helpers-ctrf';
+
 // Register all helpers with Handlebars
-registry.loadHandlebars(Handlebars);
+loadHelpers(Handlebars);
+
 
 // Now you can use the helpers in your templates
 const template = Handlebars.compile('{{append "test" ".html"}}');
