@@ -1,4 +1,4 @@
-import type { Helper } from "../helper-registry";
+import type { Helper } from "../helper-registry.js";
 
 /**
  * Retrieves a GitHub octicon URL for a given test state or category.

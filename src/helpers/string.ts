@@ -1,6 +1,6 @@
 // @ts-ignore - ansi-to-html doesn't have type definitions
 import Convert from "ansi-to-html";
-import type { Helper } from "../helper-registry";
+import type { Helper } from "../helper-registry.js";
 
 /**
  * Append the specified `suffix` to the given string.

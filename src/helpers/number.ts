@@ -1,4 +1,4 @@
-import type { Helper } from "../helper-registry";
+import type { Helper } from "../helper-registry.js";
 
 /**
  * Format a number to its equivalent in bytes. If a string is passed,

@@ -1,4 +1,4 @@
-import type { Helper } from "../helper-registry";
+import type { Helper } from "../helper-registry.js";
 
 /**
  * Converts an ISO 8601 timestamp to a human-readable short format.

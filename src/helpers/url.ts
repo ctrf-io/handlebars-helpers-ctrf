@@ -1,4 +1,4 @@
-import type { Helper } from "../helper-registry";
+import type { Helper } from "../helper-registry.js";
 
 /**
  * Encode a Uniform Resource Identifier (URI) component by replacing each instance of certain characters by one, two, three, or four escape sequences representing the UTF-8 encoding of the character.

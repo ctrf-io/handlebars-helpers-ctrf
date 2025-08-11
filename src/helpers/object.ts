@@ -1,4 +1,4 @@
-import type { Helper } from "../helper-registry";
+import type { Helper } from "../helper-registry.js";
 
 /**
  * Extend the context with the properties of other objects.

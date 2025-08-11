@@ -1,5 +1,5 @@
 import { minimatch } from "minimatch";
-import type { Helper } from "../helper-registry";
+import type { Helper } from "../helper-registry.js";
 
 /**
  * Returns an array of strings that match the given glob pattern(s).

@@ -10,7 +10,6 @@
 	},
 	"scripts": {
 		"build": "tsc",
-		"postbuild": "node scripts/esm-compatibility.js",
 		"test": "jest",
 		"test:watch": "jest --watch",
 		"test:coverage": "jest --coverage",
