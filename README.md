@@ -23,6 +23,16 @@ const template = Handlebars.compile('{{append "test" ".html"}}');
 const result = template({}); // "test.html"
 ```
 
+## Development
+
+Contributions are very welcome! Please see the [CONTRIBUTING.md](CONTRIBUTING.md) file for more information.
+
+To build the project and run the tests:
+
+```bash
+npm run all
+```
+
 ## Available Helpers
 
 - [Ctrf Helpers](#ctrf-helpers)
@@ -227,6 +237,103 @@ Formats a test duration value in milliseconds into a human-readable format. Perf
 ```handlebars
 {{test.name}} completed in {{formatDuration test.duration}}
 <!-- Output: "Login test completed in 250ms" -->
+```
+
+---
+
+#### `formatTestMessage`
+
+Core formatting logic for duration in milliseconds / const formatDurationMs = (durationMs: number): string => { if (Number.isNaN(durationMs) || durationMs < 0) { return "not captured"; } if (durationMs < 1) { return "1ms"; } else if (durationMs < 1000) { return `${Math.floor(durationMs)}ms`; } else if (durationMs < 60000) { return `${(durationMs / 1000).toFixed(1)}s`; } else if (durationMs < 3600000) { const minutes = Math.floor(durationMs / 60000); const seconds = Math.floor((durationMs % 60000) / 1000); return seconds > 0 ? `${minutes}m ${seconds}s` : `${minutes}m`; } else { const hours = Math.floor(durationMs / 3600000); const minutes = Math.floor((durationMs % 3600000) / 60000); return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`; } }; /** Converts ANSI-formatted test messages into HTML and replaces newlines with `<br>` tags. Specifically designed for formatting the `test.message` property in CTRF reports. Ideal for rendering multi-line console messages with colors in a human-friendly HTML format. This helper formats test messages so they behave well with markdown and regular HTML content.
+
+**Parameters:**
+
+- `text` (`string`) - The test message to format, possibly containing ANSI codes and newlines.
+
+**Returns:** `string` - An HTML-formatted string with ANSI codes converted to HTML and line breaks replaced.
+
+**Example:**
+
+```handlebars
+{{formatTestMessage test.message}}
+Returns: HTML with ANSI colors converted to spans and line breaks as <br> tags
+{{#if test.message}}
+<div class="test-message">{{{formatTestMessage test.message}}}</div>
+{{/if}}
+```
+
+---
+
+#### `formatTestMessagePreCode`
+
+Similar to `formatTestMessage`, but designed to preserve code formatting more closely. Converts ANSI to HTML and reduces consecutive newlines, but does not replace them with `<br>` tags. Perfect for formatting code blocks, stack traces, and other pre-formatted content in test messages. This helper is specifically designed to be used in pre code blocks where newlines need to be preserved.
+
+**Parameters:**
+
+- `text` (`unknown`) - The test message to format, possibly containing ANSI codes.
+
+**Returns:** `string` - An HTML-formatted string with ANSI codes converted to HTML and consecutive newlines minimized.
+
+**Example:**
+
+```handlebars
+<pre><code>{{#if message}}{{formatTestMessagePreCode message}}{{else}}No message available{{/if}}</code></pre>
+{{formatTestMessagePreCode test.message}}
+Returns: HTML with ANSI colors converted but newlines preserved for <pre> blocks
+{{#if test.message}}
+<pre class="test-code">{{{formatTestMessagePreCode test.message}}}</pre>
+{{/if}}
+```
+
+---
+
+#### `limitFailedTests`
+
+Filters an array of tests to only those that have failed, then limits the result to a specified number. Perfect for displaying "Top N failed tests" in dashboards and summary reports.
+
+**Parameters:**
+
+- `tests` (`unknown`) - An array of Test objects from CTRF report.
+- `limit` (`unknown`) - The maximum number of failed tests to return.
+
+**Returns:** `Test[]` - An array of failed tests up to the specified limit.
+
+**Example:**
+
+```handlebars
+{{#each (limitFailedTests tests 5)}}
+<div class="failed-test">{{this.name}}</div>
+{{/each}}
+<!-- Shows up to 5 failed tests -->
+{{#each (limitFailedTests suite.tests 3)}}
+{{this.name}} - {{this.status}}
+{{/each}}
+<!-- Shows first 3 failed tests from a suite -->
+```
+
+---
+
+#### `getCtrfEmoji`
+
+Retrieves an emoji representation for a given test state or category. Useful for adding visual flair to CTRF test reports, dashboards, and summaries.
+
+**Parameters:**
+
+- `status` (`unknown`) - The test state or category to get an emoji for.
+
+**Returns:** `string` - The emoji corresponding to the test state or category.
+
+**Example:**
+
+```handlebars
+{{getCtrfEmoji "passed"}}
+<!-- results in: "✅" -->
+{{getCtrfEmoji "failed"}}
+<!-- results in: "❌" -->
+{{getCtrfEmoji "flaky"}}
+<!-- results in: "🍂" -->
+{{getCtrfEmoji "build"}}
+<!-- results in: "🏗️" -->
+**Use with CTRF templates**: Perfect for creating visually appealing test summaries, status indicators, and dashboard elements that make test reports more engaging and easier to scan.
 ```
 
 ---
@@ -510,6 +617,31 @@ Returns the last item, or last n items in an array or string. Opposite of first.
 <!-- results in: "c" -->
 {{last test.results 2}}
 <!-- results in: ["b", "c"] -->
+```
+
+---
+
+#### `slice`
+
+Returns a slice of an array from the specified start index to the end index. Useful for pagination, limiting displayed items, or working with specific ranges of test results.
+
+**Parameters:**
+
+- `array` (`unknown`) - The array to be sliced.
+- `start` (`unknown`) - The start index for the slice.
+- `end` (`unknown`) - The end index for the slice (exclusive).
+- `options` (`object`) - Handlebars options object, including the block to render.
+
+**Returns:** `string` - A concatenated string of all rendered items within the slice.
+
+**Example:**
+
+```handlebars
+{{#slice test.results 1 4}}
+<li>{{this.name}}</li>
+{{/slice}}
+<!-- given that test.results has 10 items -->
+<!-- renders items at indices 1, 2, and 3 (end index is exclusive) -->
 ```
 
 ---
@@ -1265,6 +1397,59 @@ Return an array of files from the given directory. Useful for listing test artif
 
 ---
 
+### Github Helpers
+
+#### `getGitHubIcon`
+
+Retrieves a GitHub octicon URL for a given test state or category. Useful for creating GitHub-styled test reports, pull request comments, and GitHub Actions outputs.
+
+**Parameters:**
+
+- `status` (`unknown`) - The test state or category to get a GitHub octicon for.
+
+**Returns:** `string` - The GitHub octicon URL corresponding to the provided state.
+
+**Example:**
+
+```handlebars
+{{getGitHubIcon "passed"}}
+<!-- results in: "https://ctrf.io/assets/github/check-circle.svg" -->
+{{getGitHubIcon "failed"}}
+<!-- results in: "https://ctrf.io/assets/github/stop.svg" -->
+{{getGitHubIcon "flaky"}}
+<!-- results in: "https://ctrf.io/assets/github/alert.svg" -->
+{{getGitHubIcon "stats"}}
+<!-- results in: "https://ctrf.io/assets/github/pulse.svg" -->
+**Use with CTRF templates**: Perfect for creating GitHub-styled test reports, pull request status comments, GitHub Actions summaries, and any GitHub-integrated test reporting that needs consistent GitHub octicon iconography.
+```
+
+---
+
+#### `formatTestPath`
+
+Internal function that maps CTRF states and keywords to appropriate GitHub octicon names. Returns URLs to GitHub octicon SVGs hosted on ctrf.io.
+
+**Parameters:**
+
+- `suite` (`unknown`) - The test suite path (may contain spaces or ">" as separators).
+- `name` (`unknown`) - The test name.
+
+**Returns:** `string` - A formatted string with GitHub arrow-right icons between path segments.
+
+**Example:**
+
+```handlebars
+{{formatTestPath "filename.ts > suiteone > suitetwo" "test name"}}
+<!-- results in: "filename.ts ![arrow-right](https://ctrf.io/assets/github/arrow-right.svg) suiteone ![arrow-right](https://ctrf.io/assets/github/arrow-right.svg) suitetwo ![arrow-right](https://ctrf.io/assets/github/arrow-right.svg) test name" -->
+{{formatTestPath suite.name "Login Test"}}
+<!-- formats suite path with arrow separators -->
+{{formatTestPath "User Tests > Authentication" "should login with valid credentials"}}
+<!-- creates clear test hierarchy visualization -->
+**Use with CTRF templates**: Perfect for creating GitHub-styled test reports, pull request comments, and any documentation that needs clear test path hierarchies with professional arrow separators.
+```
+
+---
+
 ### Inflection Helpers
 
 #### `inflect`
@@ -1419,6 +1604,28 @@ Return the sum of a plus b. Useful for aggregating test metrics, such as total r
 {{add test.duration 100}}
 <!-- given that test.duration is 50 -->
 <!-- results in: 150 -->
+```
+
+---
+
+#### `addAll`
+
+Adds multiple numbers together and returns the sum. Useful for totaling multiple test metrics or values in a single expression.
+
+**Parameters:**
+
+- `args` (`...unknown`) - The numbers to be added (last argument is Handlebars options).
+
+**Returns:** `number` - The sum of all provided numbers.
+
+**Example:**
+
+```handlebars
+{{addAll test.duration test.retries 100}}
+<!-- given that test.duration is 50 and test.retries is 3 -->
+<!-- results in: 153 -->
+{{addAll 1 2 3 4 5}}
+<!-- results in: 15 -->
 ```
 
 ---
@@ -1979,6 +2186,34 @@ Returns a string representing the Number object to the specified precision. Usef
 <!-- given that duration is 0.00123 -->
 <!-- results in: "0.0012" -->
 **Use with CTRF templates**: Perfect for displaying performance metrics, scientific test data, or any values where you need consistent significant digit precision across different scales.
+```
+
+---
+
+#### `toPercent`
+
+Converts a decimal rate (0-1) to a percentage with fixed decimal places. This is specifically for rates from the CTRF insights that are calculated as decimals. Useful for displaying test success rates, failure rates, flaky rates, and coverage percentages in test reports.
+
+**Parameters:**
+
+- `rate` (`unknown`) - The numeric rate as a decimal (0-1) from test data.
+- `fractionDigits` (`unknown`) - Optional. The number of decimal places (0-20). Defaults to 2.
+
+**Returns:** `string` - The formatted percentage string for use in test reports.
+
+**Example:**
+
+```handlebars
+{{toPercent test.stats.successRate 2}}
+<!-- given that successRate is 0.9876 -->
+<!-- results in: "98.76" -->
+{{toPercent test.coverage.failRate 1}}
+<!-- given that failRate is 0.0525 -->
+<!-- results in: "5.3" -->
+{{toPercent test.performance.flakyRate 3}}
+<!-- given that flakyRate is 0.001 -->
+<!-- results in: "0.100" -->
+**Use with CTRF templates**: Essential for displaying test rates, success/failure percentages, coverage metrics, and any decimal values that represent ratios as readable percentages in test reports.
 ```
 
 ---
@@ -3094,6 +3329,53 @@ Split string by the given character. Useful for parsing test data, tags, or crea
 
 ---
 
+#### `splitLines`
+
+Splits the given text into an array of lines, omitting any empty lines. Useful for processing multiline strings and iterating over each line in test reports. Perfect for handling stack traces, error messages, or console output.
+
+**Parameters:**
+
+- `str` (`unknown`) - The input string containing one or more lines.
+
+**Returns:** `string[]` - An array of non-empty lines.
+
+**Example:**
+
+```handlebars
+{{#each (splitLines test.error.stack)}}
+<div class="stack-line">{{this}}</div>
+{{/each}}
+{{splitLines "Line one\n\nLine two\nLine three"}}
+<!-- results in: ["Line one", "Line two", "Line three"] -->
+```
+
+---
+
+#### `sliceString`
+
+Extracts a section of a string and returns a new string based on start and end indices. Useful for extracting portions of test IDs, commit hashes, or truncating strings to specific positions.
+
+**Parameters:**
+
+- `str` (`unknown`) - The input string to slice.
+- `start` (`unknown`) - The index of the first character to include in the returned substring.
+- `end` (`unknown`) - Optional. The index of the first character to exclude from the returned substring.
+
+**Returns:** `string` - A new string containing the extracted section.
+
+**Example:**
+
+```handlebars
+{{sliceString "d9a40a70dd26e3b309e9d106adaca2417d4ffb1e" 0 7}}
+<!-- results in: "d9a40a7" -->
+{{sliceString test.commitHash 0 8}}
+<!-- extracts first 8 characters of commit hash -->
+{{sliceString test.name 5}}
+<!-- extracts from index 5 to end of string -->
+```
+
+---
+
 #### `startsWith`
 
 Test whether a string begins with the given prefix. Useful for conditional logic and filtering in test report templates.
@@ -3287,6 +3569,103 @@ Uppercase all characters in the given string. Useful for creating emphasis, head
 <!-- converts "passed" to "PASSED" -->
 {{uppercase "api endpoint test"}}
 <!-- results in: "API ENDPOINT TEST" -->
+```
+
+---
+
+#### `escapeMarkdown`
+
+Escapes special Markdown characters in the given string. This is useful to ensure that characters like `*`, `_`, `(`, `)`, etc. don't inadvertently format the output as Markdown in test reports or documentation.
+
+**Parameters:**
+
+- `str` (`unknown`) - The input string containing potential Markdown characters.
+
+**Returns:** `string` - The string with Markdown characters escaped.
+
+**Example:**
+
+```handlebars
+{{escapeMarkdown "Hello *world*"}}
+<!-- results in: "Hello \\*world\\*" -->
+{{escapeMarkdown test.name}}
+<!-- given that test.name is "test_[important]_case" -->
+<!-- results in: "test\\_\\[important\\]\\_case" -->
+```
+
+---
+
+#### `stripAnsi`
+
+Strips ANSI escape codes from the given message.
+
+**Parameters:**
+
+- `message` (`unknown`) - The string potentially containing ANSI escape codes.
+
+**Returns:** `string` - The string with all ANSI escape codes removed.
+
+**Example:**
+
+```handlebars
+{{stripAnsi "Hello \u001b[31mRed\u001b[0m"}}
+Returns: "Hello Red"
+```
+
+---
+
+#### `stripAnsi`
+
+Strips ANSI escape codes from a given string.
+
+---
+
+#### `ansiRegex`
+
+Returns a regular expression for matching ANSI escape codes.
+
+---
+
+#### `ansiToHtml`
+
+Converts ANSI escape codes in the given message to HTML. This is useful for displaying colorized console output in a browser.
+
+**Parameters:**
+
+- `message` (`unknown`) - The ANSI-colored string.
+
+**Returns:** `string` - An HTML-formatted string reflecting the original ANSI colors.
+
+**Example:**
+
+```handlebars
+{{ansiToHtml "Hello \u001b[31mRed\u001b[0m"}}
+Returns: "Hello <span style=\"color:#A00\">Red</span>"
+```
+
+---
+
+### Timestamp Helpers
+
+#### `formatTimestampShort`
+
+Converts an ISO 8601 timestamp to a human-readable short format. Perfect for displaying test timestamps, build times, or execution dates in a compact format.
+
+**Parameters:**
+
+- `timestamp` (`unknown`) - The ISO 8601 timestamp string to convert.
+
+**Returns:** `string` - A human-readable string in format "Mon DD, YY, H:MM AM/PM".
+
+**Example:**
+
+```handlebars
+{{formatTimestampShort "2025-01-19T15:06:45Z"}}
+<!-- results in: "Jan 19, 25, 3:06 PM" -->
+{{formatTimestampShort test.timestamp}}
+<!-- converts test execution time to readable format -->
+{{formatTimestampShort build.createdAt}}
+<!-- shows build creation time in short format -->
 ```
 
 ---

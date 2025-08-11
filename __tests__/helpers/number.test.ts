@@ -7,6 +7,7 @@ import {
 	toExponentialHelper,
 	toFixedHelper,
 	toPrecisionHelper,
+	toPercentHelper,
 } from "../../src/helpers/number";
 
 describe("bytesHelper", () => {
@@ -327,9 +328,49 @@ describe("toPrecisionHelper", () => {
 	});
 });
 
+describe("toPercentHelper", () => {
+	it("should convert decimal rates to percentages", () => {
+		expect(toPercentHelper.fn(0.001, 2)).toBe("0.10");
+		expect(toPercentHelper.fn(0.0525, 2)).toBe("5.25");
+		expect(toPercentHelper.fn(0.9876, 2)).toBe("98.76");
+		expect(toPercentHelper.fn(0.5, 1)).toBe("50.0");
+		expect(toPercentHelper.fn(1.0, 0)).toBe("100");
+	});
+
+	it("should handle fractionDigits parameter as string", () => {
+		expect(toPercentHelper.fn(0.1234, "3")).toBe("12.340");
+		expect(toPercentHelper.fn(0.9876, "1")).toBe("98.8");
+	});
+
+	it("should default to 2 decimal places when no fractionDigits provided", () => {
+		expect(toPercentHelper.fn(0.1234)).toBe("12.34");
+		expect(toPercentHelper.fn(0.9876)).toBe("98.76");
+		expect(toPercentHelper.fn(0.5)).toBe("50.00");
+	});
+
+	it("should handle edge cases", () => {
+		expect(toPercentHelper.fn(null)).toBe("0.00");
+		expect(toPercentHelper.fn(undefined)).toBe("0.00");
+		expect(toPercentHelper.fn(Number.NaN)).toBe("0.00");
+		expect(toPercentHelper.fn("string")).toBe("0.00");
+		expect(toPercentHelper.fn({})).toBe("0.00");
+	});
+
+	it("should handle zero and one", () => {
+		expect(toPercentHelper.fn(0, 2)).toBe("0.00");
+		expect(toPercentHelper.fn(1, 0)).toBe("100");
+	});
+
+	it("should be registered correctly", () => {
+		expect(toPercentHelper.name).toBe("toPercent");
+		expect(toPercentHelper.category).toBe("Number");
+		expect(typeof toPercentHelper.fn).toBe("function");
+	});
+});
+
 describe("numberHelpers array", () => {
 	it("should contain all number helpers", () => {
-		expect(numberHelpers).toHaveLength(7);
+		expect(numberHelpers).toHaveLength(8);
 		expect(numberHelpers).toContain(bytesHelper);
 		expect(numberHelpers).toContain(addCommasHelper);
 		expect(numberHelpers).toContain(phoneNumberHelper);
@@ -337,6 +378,7 @@ describe("numberHelpers array", () => {
 		expect(numberHelpers).toContain(toExponentialHelper);
 		expect(numberHelpers).toContain(toFixedHelper);
 		expect(numberHelpers).toContain(toPrecisionHelper);
+		expect(numberHelpers).toContain(toPercentHelper);
 	});
 
 	it("should have proper Helper structure for all helpers", () => {

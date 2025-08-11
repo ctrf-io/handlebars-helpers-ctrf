@@ -1,3 +1,5 @@
+// @ts-ignore - ansi-to-html doesn't have type definitions
+import Convert from "ansi-to-html";
 import type { Helper } from "../helper-registry";
 
 /**
@@ -837,6 +839,79 @@ export const splitHelper: Helper = {
 };
 
 /**
+ * Splits the given text into an array of lines, omitting any empty lines.
+ * Useful for processing multiline strings and iterating over each line in test reports.
+ * Perfect for handling stack traces, error messages, or console output.
+ *
+ * @example
+ * {{#each (splitLines test.error.stack)}}
+ *   <div class="stack-line">{{this}}</div>
+ * {{/each}}
+ *
+ * {{splitLines "Line one\n\nLine two\nLine three"}}
+ * <!-- results in: ["Line one", "Line two", "Line three"] -->
+ *
+ * @param {unknown} str - The input string containing one or more lines.
+ * @returns {string[]} An array of non-empty lines.
+ *  Use to process multiline test output, stack traces, or error messages.
+ */
+export const splitLinesHelper: Helper = {
+	name: "splitLines",
+	category: "String",
+	fn: (str: unknown) => {
+		if (typeof str !== "string") {
+			return [];
+		}
+		if (!str) {
+			return [];
+		}
+		// Split by newlines and filter out empty/whitespace-only lines
+		return str.split("\n").filter((line: string) => line.trim() !== "");
+	},
+};
+
+/**
+ * Extracts a section of a string and returns a new string based on start and end indices.
+ * Useful for extracting portions of test IDs, commit hashes, or truncating strings to specific positions.
+ *
+ * @example
+ * {{sliceString "d9a40a70dd26e3b309e9d106adaca2417d4ffb1e" 0 7}}
+ * <!-- results in: "d9a40a7" -->
+ *
+ * {{sliceString test.commitHash 0 8}}
+ * <!-- extracts first 8 characters of commit hash -->
+ *
+ * {{sliceString test.name 5}}
+ * <!-- extracts from index 5 to end of string -->
+ *
+ * @param {unknown} str - The input string to slice.
+ * @param {unknown} start - The index of the first character to include in the returned substring.
+ * @param {unknown} end - Optional. The index of the first character to exclude from the returned substring.
+ * @returns {string} A new string containing the extracted section.
+ *  Use to extract specific portions of strings like IDs, hashes, or file paths.
+ */
+export const sliceStringHelper: Helper = {
+	name: "sliceString",
+	category: "String",
+	fn: (str: unknown, start: unknown, end?: unknown) => {
+		if (typeof str !== "string") {
+			return "";
+		}
+		const startIdx =
+			typeof start === "number" ? start : parseInt(String(start), 10) || 0;
+
+		// If end is provided, use it; otherwise slice to end of string
+		if (end !== undefined) {
+			const endIdx =
+				typeof end === "number" ? end : parseInt(String(end), 10) || str.length;
+			return str.slice(startIdx, endIdx);
+		}
+
+		return str.slice(startIdx);
+	},
+};
+
+/**
  * Test whether a string begins with the given prefix.
  * Useful for conditional logic and filtering in test report templates.
  *
@@ -1105,7 +1180,112 @@ export const uppercaseHelper: Helper = {
 	},
 };
 
+/**
+ * Escapes special Markdown characters in the given string.
+ * This is useful to ensure that characters like `*`, `_`, `(`, `)`, etc.
+ * don't inadvertently format the output as Markdown in test reports or documentation.
+ *
+ * @example
+ * {{escapeMarkdown "Hello *world*"}}
+ * <!-- results in: "Hello \\*world\\*" -->
+ *
+ * {{escapeMarkdown test.name}}
+ * <!-- given that test.name is "test_[important]_case" -->
+ * <!-- results in: "test\\_\\[important\\]\\_case" -->
+ *
+ * @param {unknown} str - The input string containing potential Markdown characters.
+ * @returns {string} The string with Markdown characters escaped.
+ *  Use to safely display test names, file paths, or error messages in Markdown.
+ */
+export const escapeMarkdownHelper: Helper = {
+	name: "escapeMarkdown",
+	category: "String",
+	fn: (str: unknown) => {
+		if (typeof str !== "string") {
+			return "";
+		}
+		// Escape Markdown special characters: \ * _ { } [ ] ( ) # + - . !
+		return str.replace(/([\\*_{}[\]()#+\-.!])/g, "\\$1");
+	},
+};
+
+/**
+ * Strips ANSI escape codes from the given message.
+ *
+ * @example
+ * {{stripAnsi "Hello \u001b[31mRed\u001b[0m"}}
+ * Returns: "Hello Red"
+ *
+ * @param {unknown} message - The string potentially containing ANSI escape codes.
+ * @returns {string} The string with all ANSI escape codes removed.
+ */
+export const stripAnsiHelper: Helper = {
+	name: "stripAnsi",
+	category: "String",
+	fn: (message: unknown) => {
+		if (typeof message !== "string") {
+			return "";
+		}
+		return stripAnsi(message);
+	},
+};
+
+/**
+ * Strips ANSI escape codes from a given string.
+ *
+ * @param message - The string from which ANSI escape codes will be removed.
+ * @returns The string with ANSI escape codes removed.
+ * @throws {TypeError} If the input is not a string.
+ */
+export function stripAnsi(message: string): string {
+	if (typeof message !== "string") {
+		throw new TypeError(`Expected a \`string\`, got \`${typeof message}\``);
+	}
+
+	return message.replace(ansiRegex(), "");
+}
+
+/**
+ * Returns a regular expression for matching ANSI escape codes.
+ *
+ * @param options - An optional object specifying whether to match only the first occurrence.
+ * @param options.onlyFirst - If true, matches only the first occurrence of an ANSI code.
+ * @returns A regular expression for matching ANSI escape codes.
+ */
+export function ansiRegex({ onlyFirst = false } = {}): RegExp {
+	const pattern = [
+		"[\\u001B\\u009B][[\\]()#;?]*(?:(?:(?:(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]+)*|[a-zA-Z\\d]+(?:;[-a-zA-Z\\d\\/#&.:=?%@~_]*)*)?\\u0007)",
+		"(?:(?:\\d{1,4}(?:;\\d{0,4})*)?[\\dA-PR-TZcf-ntqry=><~]))",
+	].join("|");
+
+	return new RegExp(pattern, onlyFirst ? undefined : "g");
+}
+
+/**
+ * Converts ANSI escape codes in the given message to HTML.
+ * This is useful for displaying colorized console output in a browser.
+ *
+ * @example
+ * {{ansiToHtml "Hello \u001b[31mRed\u001b[0m"}}
+ * Returns: "Hello <span style=\"color:#A00\">Red</span>"
+ *
+ * @param {unknown} message - The ANSI-colored string.
+ * @returns {string} An HTML-formatted string reflecting the original ANSI colors.
+ */
+export const ansiToHtmlHelper: Helper = {
+	name: "ansiToHtml",
+	category: "String",
+	fn: (message: unknown) => {
+		if (typeof message !== "string") {
+			return "";
+		}
+		const convert = new Convert();
+		return convert.toHtml(message);
+	},
+};
+
 export const stringHelpers: Helper[] = [
+	ansiToHtmlHelper,
 	appendHelper,
 	camelCaseHelper,
 	capitalizeHelper,
@@ -1116,6 +1296,7 @@ export const stringHelpers: Helper[] = [
 	dotCaseHelper,
 	downCaseHelper,
 	ellipsisHelper,
+	escapeMarkdownHelper,
 	hyphenateHelper,
 	isStringHelper,
 	lowerCaseHelper,
@@ -1131,9 +1312,12 @@ export const stringHelpers: Helper[] = [
 	replaceFirstHelper,
 	reverseHelper,
 	sentenceHelper,
+	sliceStringHelper,
 	snakeCaseHelper,
 	splitHelper,
+	splitLinesHelper,
 	startsWithHelper,
+	stripAnsiHelper,
 	titleizeHelper,
 	trimHelper,
 	trimLeftHelper,

@@ -47,6 +47,35 @@ export const addHelper: Helper = {
 };
 
 /**
+ * Adds multiple numbers together and returns the sum.
+ * Useful for totaling multiple test metrics or values in a single expression.
+ *
+ * @example
+ * {{addAll test.duration test.retries 100}}
+ * <!-- given that test.duration is 50 and test.retries is 3 -->
+ * <!-- results in: 153 -->
+ *
+ * {{addAll 1 2 3 4 5}}
+ * <!-- results in: 15 -->
+ *
+ * @param {...unknown} args - The numbers to be added (last argument is Handlebars options).
+ * @returns {number} The sum of all provided numbers.
+ *  Use to combine multiple test metrics into a total.
+ */
+export const addAllHelper: Helper = {
+	name: "addAll",
+	category: "Math",
+	fn: (...args: unknown[]) => {
+		// Remove the last argument which is Handlebars options object
+		const values = args.slice(0, -1);
+		return values.reduce((sum: number, value: unknown) => {
+			const num = typeof value === "number" ? value : parseFloat(String(value));
+			return sum + (Number.isNaN(num) ? 0 : num);
+		}, 0);
+	},
+};
+
+/**
  * Returns the average of all numbers in the given array.
  * Useful for calculating average test durations, retry counts, or error rates in CTRF reports.
  *
@@ -400,6 +429,7 @@ export const timesHelper: Helper = {
 export const mathHelpers: Helper[] = [
 	absHelper,
 	addHelper,
+	addAllHelper,
 	avgHelper,
 	ceilHelper,
 	divideHelper,
