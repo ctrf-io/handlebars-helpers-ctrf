@@ -459,7 +459,7 @@ describe("CTRF Helpers", () => {
 
 		it("should handle negative duration (stop before start)", () => {
 			const result = formatDurationFromTimesHelper.fn(2000, 1000);
-			expect(result).toBe("not captured");
+			expect(result).toBe("1ms");
 		});
 	});
 

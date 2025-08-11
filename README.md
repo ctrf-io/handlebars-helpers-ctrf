@@ -243,7 +243,7 @@ Formats a test duration value in milliseconds into a human-readable format. Perf
 
 #### `formatTestMessage`
 
-Core formatting logic for duration in milliseconds / const formatDurationMs = (durationMs: number): string => { if (Number.isNaN(durationMs) || durationMs < 0) { return "not captured"; } if (durationMs < 1) { return "1ms"; } else if (durationMs < 1000) { return `${Math.floor(durationMs)}ms`; } else if (durationMs < 60000) { return `${(durationMs / 1000).toFixed(1)}s`; } else if (durationMs < 3600000) { const minutes = Math.floor(durationMs / 60000); const seconds = Math.floor((durationMs % 60000) / 1000); return seconds > 0 ? `${minutes}m ${seconds}s` : `${minutes}m`; } else { const hours = Math.floor(durationMs / 3600000); const minutes = Math.floor((durationMs % 3600000) / 60000); return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`; } }; /** Converts ANSI-formatted test messages into HTML and replaces newlines with `<br>` tags. Specifically designed for formatting the `test.message` property in CTRF reports. Ideal for rendering multi-line console messages with colors in a human-friendly HTML format. This helper formats test messages so they behave well with markdown and regular HTML content.
+Converts ANSI-formatted test messages into HTML and replaces newlines with `<br>` tags. Specifically designed for formatting the `test.message` property in CTRF reports. Ideal for rendering multi-line console messages with colors in a human-friendly HTML format. This helper formats test messages so they behave well with markdown and regular HTML content.
 
 **Parameters:**
 

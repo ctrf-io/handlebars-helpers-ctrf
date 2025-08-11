@@ -307,7 +307,7 @@ export const formatDurationFromTimesHelper: Helper = {
 		const startNum = typeof start === "number" ? start : 0;
 		const stopNum = typeof stop === "number" ? stop : 0;
 
-		if (startNum === 0 && stopNum === 0) {
+		if (start === 0 && stop === 0) {
 			return "not captured";
 		}
 
@@ -316,7 +316,21 @@ export const formatDurationFromTimesHelper: Helper = {
 		}
 
 		const durationMs = stopNum - startNum;
-		return formatDurationMs(durationMs);
+		if (durationMs < 1) {
+			return `1ms`;
+		} else if (durationMs < 1000) {
+			return `${Math.floor(durationMs)}ms`;
+		} else if (durationMs < 60000) {
+			return `${(durationMs / 1000).toFixed(1)}s`;
+		} else if (durationMs < 3600000) {
+			const minutes = Math.floor(durationMs / 60000);
+			const seconds = Math.floor((durationMs % 60000) / 1000);
+			return seconds > 0 ? `${minutes}m ${seconds}s` : `${minutes}m`;
+		} else {
+			const hours = Math.floor(durationMs / 3600000);
+			const minutes = Math.floor((durationMs % 3600000) / 60000);
+			return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
+		}
 	},
 };
 
@@ -336,33 +350,26 @@ export const formatDurationHelper: Helper = {
 	category: "CTRF",
 	fn: (duration: unknown) => {
 		const durationNum = typeof duration === "number" ? duration : 0;
-		return formatDurationMs(durationNum);
+		if (Number.isNaN(durationNum) || durationNum < 0) {
+			return "not captured";
+		}
+
+		if (durationNum < 1) {
+			return `1ms`;
+		} else if (durationNum < 1000) {
+			return `${Math.floor(durationNum)}ms`;
+		} else if (durationNum < 60000) {
+			return `${(durationNum / 1000).toFixed(1)}s`;
+		} else if (durationNum < 3600000) {
+			const minutes = Math.floor(durationNum / 60000);
+			const seconds = Math.floor((durationNum % 60000) / 1000);
+			return seconds > 0 ? `${minutes}m ${seconds}s` : `${minutes}m`;
+		} else {
+			const hours = Math.floor(durationNum / 3600000);
+			const minutes = Math.floor((durationNum % 3600000) / 60000);
+			return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
+		}
 	},
-};
-
-/**
- * Core formatting logic for duration in milliseconds
- */
-const formatDurationMs = (durationMs: number): string => {
-	if (Number.isNaN(durationMs) || durationMs < 0) {
-		return "not captured";
-	}
-
-	if (durationMs < 1) {
-		return "1ms";
-	} else if (durationMs < 1000) {
-		return `${Math.floor(durationMs)}ms`;
-	} else if (durationMs < 60000) {
-		return `${(durationMs / 1000).toFixed(1)}s`;
-	} else if (durationMs < 3600000) {
-		const minutes = Math.floor(durationMs / 60000);
-		const seconds = Math.floor((durationMs % 60000) / 1000);
-		return seconds > 0 ? `${minutes}m ${seconds}s` : `${minutes}m`;
-	} else {
-		const hours = Math.floor(durationMs / 3600000);
-		const minutes = Math.floor((durationMs % 3600000) / 60000);
-		return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
-	}
 };
 
 /**
