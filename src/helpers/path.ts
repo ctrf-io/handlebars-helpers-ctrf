@@ -1,5 +1,5 @@
 import { basename, dirname, extname, relative, resolve, sep } from "node:path";
-import type { Helper } from "../helper-registry";
+import type { Helper } from "../helper-registry.js";
 
 /**
  * Get the directory path segment from the given `filepath`.

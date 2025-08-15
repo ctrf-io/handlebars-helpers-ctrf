@@ -1,4 +1,4 @@
-import type { Helper } from "../helper-registry";
+import type { Helper } from "../helper-registry.js";
 
 /**
  * Format a number to its equivalent in bytes. If a string is passed,
@@ -365,6 +365,58 @@ export const toPrecisionHelper: Helper = {
 	},
 };
 
+/**
+ * Converts a decimal rate (0-1) to a percentage with fixed decimal places.
+ * This is specifically for rates from the CTRF insights that are calculated as decimals.
+ * Useful for displaying test success rates, failure rates, flaky rates, and coverage percentages in test reports.
+ *
+ * @example
+ * {{toPercent test.stats.successRate 2}}
+ * <!-- given that successRate is 0.9876 -->
+ * <!-- results in: "98.76" -->
+ *
+ * {{toPercent test.coverage.failRate 1}}
+ * <!-- given that failRate is 0.0525 -->
+ * <!-- results in: "5.3" -->
+ *
+ * {{toPercent test.performance.flakyRate 3}}
+ * <!-- given that flakyRate is 0.001 -->
+ * <!-- results in: "0.100" -->
+ *
+ * **Use with CTRF templates**: Essential for displaying test rates, success/failure percentages, coverage metrics, and any decimal values that represent ratios as readable percentages in test reports.
+ *
+ * @param {unknown} rate - The numeric rate as a decimal (0-1) from test data.
+ * @param {unknown} fractionDigits - Optional. The number of decimal places (0-20). Defaults to 2.
+ * @returns {string} The formatted percentage string for use in test reports.
+ */
+export const toPercentHelper: Helper = {
+	name: "toPercent",
+	category: "Number",
+	fn: (rate: unknown, fractionDigits?: unknown) => {
+		// Handle null, undefined, or NaN values
+		if (rate == null || typeof rate !== "number" || Number.isNaN(rate)) {
+			return "0.00";
+		}
+
+		let digits = 2; // Default to 2 decimal places for rates
+		if (typeof fractionDigits === "string") {
+			const parsed = parseInt(fractionDigits, 10);
+			if (!Number.isNaN(parsed) && parsed >= 0 && parsed <= 20) {
+				digits = parsed;
+			}
+		} else if (
+			typeof fractionDigits === "number" &&
+			!Number.isNaN(fractionDigits) &&
+			fractionDigits >= 0 &&
+			fractionDigits <= 20
+		) {
+			digits = fractionDigits;
+		}
+
+		return (rate * 100).toFixed(digits);
+	},
+};
+
 export const numberHelpers: Helper[] = [
 	bytesHelper,
 	addCommasHelper,
@@ -373,4 +425,5 @@ export const numberHelpers: Helper[] = [
 	toExponentialHelper,
 	toFixedHelper,
 	toPrecisionHelper,
+	toPercentHelper,
 ];

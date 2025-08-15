@@ -1,6 +1,7 @@
 import {
 	absHelper,
 	addHelper,
+	addAllHelper,
 	avgHelper,
 	ceilHelper,
 	divideHelper,
@@ -33,6 +34,43 @@ describe("Math Helpers", () => {
 			expect(addHelper.fn(1, "foo")).toBe(1);
 		});
 	});
+
+	describe("addAllHelper", () => {
+		it("adds multiple numbers", () => {
+			// Simulate Handlebars call with options object as last arg
+			const mockOptions = {};
+			expect(addAllHelper.fn(1, 2, 3, mockOptions)).toBe(6);
+			expect(addAllHelper.fn(1, 2, 3, 4, 5, mockOptions)).toBe(15);
+		});
+
+		it("handles string numbers", () => {
+			const mockOptions = {};
+			expect(addAllHelper.fn("1", "2", "3", mockOptions)).toBe(6);
+			expect(addAllHelper.fn(5, "10", "15", mockOptions)).toBe(30);
+		});
+
+		it("handles invalid numbers as 0", () => {
+			const mockOptions = {};
+			expect(addAllHelper.fn(1, "foo", 3, mockOptions)).toBe(4);
+			expect(addAllHelper.fn("bar", "baz", mockOptions)).toBe(0);
+		});
+
+		it("handles empty arguments", () => {
+			const mockOptions = {};
+			expect(addAllHelper.fn(mockOptions)).toBe(0);
+		});
+
+		it("handles single argument", () => {
+			const mockOptions = {};
+			expect(addAllHelper.fn(42, mockOptions)).toBe(42);
+		});
+
+		it("should be categorized as Math helper", () => {
+			expect(addAllHelper.category).toBe("Math");
+			expect(addAllHelper.name).toBe("addAll");
+		});
+	});
+
 	describe("avgHelper", () => {
 		it("returns average of array", () => {
 			expect(avgHelper.fn([1, 2, 3, 4, 5])).toBe(3);

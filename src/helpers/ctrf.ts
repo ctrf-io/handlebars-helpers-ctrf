@@ -1,5 +1,7 @@
+// @ts-ignore - ansi-to-html doesn't have type definitions
+import Convert from "ansi-to-html";
 import type { Test } from "ctrf";
-import type { Helper } from "../helper-registry";
+import type { Helper } from "../helper-registry.js";
 
 /**
  * Sorts tests by their failure rate in descending order, showing the most unreliable tests first.
@@ -305,7 +307,7 @@ export const formatDurationFromTimesHelper: Helper = {
 		const startNum = typeof start === "number" ? start : 0;
 		const stopNum = typeof stop === "number" ? stop : 0;
 
-		if (startNum === 0 && stopNum === 0) {
+		if (start === 0 && stop === 0) {
 			return "not captured";
 		}
 
@@ -314,7 +316,21 @@ export const formatDurationFromTimesHelper: Helper = {
 		}
 
 		const durationMs = stopNum - startNum;
-		return formatDurationMs(durationMs);
+		if (durationMs < 1) {
+			return `1ms`;
+		} else if (durationMs < 1000) {
+			return `${Math.floor(durationMs)}ms`;
+		} else if (durationMs < 60000) {
+			return `${(durationMs / 1000).toFixed(1)}s`;
+		} else if (durationMs < 3600000) {
+			const minutes = Math.floor(durationMs / 60000);
+			const seconds = Math.floor((durationMs % 60000) / 1000);
+			return seconds > 0 ? `${minutes}m ${seconds}s` : `${minutes}m`;
+		} else {
+			const hours = Math.floor(durationMs / 3600000);
+			const minutes = Math.floor((durationMs % 3600000) / 60000);
+			return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
+		}
 	},
 };
 
@@ -334,33 +350,211 @@ export const formatDurationHelper: Helper = {
 	category: "CTRF",
 	fn: (duration: unknown) => {
 		const durationNum = typeof duration === "number" ? duration : 0;
-		return formatDurationMs(durationNum);
+		if (Number.isNaN(durationNum) || durationNum < 0) {
+			return "not captured";
+		}
+
+		if (durationNum < 1) {
+			return `1ms`;
+		} else if (durationNum < 1000) {
+			return `${Math.floor(durationNum)}ms`;
+		} else if (durationNum < 60000) {
+			return `${(durationNum / 1000).toFixed(1)}s`;
+		} else if (durationNum < 3600000) {
+			const minutes = Math.floor(durationNum / 60000);
+			const seconds = Math.floor((durationNum % 60000) / 1000);
+			return seconds > 0 ? `${minutes}m ${seconds}s` : `${minutes}m`;
+		} else {
+			const hours = Math.floor(durationNum / 3600000);
+			const minutes = Math.floor((durationNum % 3600000) / 60000);
+			return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
+		}
 	},
 };
 
 /**
- * Core formatting logic for duration in milliseconds
+ * Converts ANSI-formatted test messages into HTML and replaces newlines with `<br>` tags.
+ * Specifically designed for formatting the `test.message` property in CTRF reports.
+ * Ideal for rendering multi-line console messages with colors in a human-friendly HTML format.
+ * This helper formats test messages so they behave well with markdown and regular HTML content.
+ *
+ * @example
+ * {{formatTestMessage test.message}}
+ * Returns: HTML with ANSI colors converted to spans and line breaks as <br> tags
+ *
+ * {{#if test.message}}
+ *   <div class="test-message">{{{formatTestMessage test.message}}}</div>
+ * {{/if}}
+ *
+ * @param {string} text - The test message to format, possibly containing ANSI codes and newlines.
+ * @returns {string} An HTML-formatted string with ANSI codes converted to HTML and line breaks replaced.
  */
-const formatDurationMs = (durationMs: number): string => {
-	if (Number.isNaN(durationMs) || durationMs < 0) {
-		return "not captured";
-	}
+export const formatTestMessageHelper: Helper = {
+	name: "formatTestMessage",
+	category: "CTRF",
+	fn: (text: unknown) => {
+		if (typeof text !== "string") {
+			return "";
+		}
 
-	if (durationMs < 1) {
-		return "1ms";
-	} else if (durationMs < 1000) {
-		return `${Math.floor(durationMs)}ms`;
-	} else if (durationMs < 60000) {
-		return `${(durationMs / 1000).toFixed(1)}s`;
-	} else if (durationMs < 3600000) {
-		const minutes = Math.floor(durationMs / 60000);
-		const seconds = Math.floor((durationMs % 60000) / 1000);
-		return seconds > 0 ? `${minutes}m ${seconds}s` : `${minutes}m`;
-	} else {
-		const hours = Math.floor(durationMs / 3600000);
-		const minutes = Math.floor((durationMs % 3600000) / 60000);
-		return minutes > 0 ? `${hours}h ${minutes}m` : `${hours}h`;
-	}
+		const message = text || "No message available";
+		const convert = new Convert();
+
+		// Convert ANSI codes to HTML, then handle newlines
+		return (
+			convert
+				.toHtml(message)
+				.replace(/\n/g, "<br>")
+				// Clean up multiple consecutive line breaks (optional - converts <br><br> to <br>)
+				.replace(/(<br>){2,}/g, "<br><br>")
+		);
+	},
+};
+
+/**
+ * Similar to `formatTestMessage`, but designed to preserve code formatting more closely.
+ * Converts ANSI to HTML and reduces consecutive newlines, but does not replace them with `<br>` tags.
+ * Perfect for formatting code blocks, stack traces, and other pre-formatted content in test messages.
+ * This helper is specifically designed to be used in pre code blocks where newlines need to be preserved.
+ *
+ * @example
+ * <pre><code>{{#if message}}{{formatTestMessagePreCode message}}{{else}}No message available{{/if}}</code></pre>
+ *
+ * {{formatTestMessagePreCode test.message}}
+ * Returns: HTML with ANSI colors converted but newlines preserved for <pre> blocks
+ *
+ * {{#if test.message}}
+ *   <pre class="test-code">{{{formatTestMessagePreCode test.message}}}</pre>
+ * {{/if}}
+ *
+ * @param {unknown} text - The test message to format, possibly containing ANSI codes.
+ * @returns {string} An HTML-formatted string with ANSI codes converted to HTML and consecutive newlines minimized.
+ */
+export const formatTestMessagePreCodeHelper: Helper = {
+	name: "formatTestMessagePreCode",
+	category: "CTRF",
+	fn: (text: unknown) => {
+		if (typeof text !== "string") {
+			return "";
+		}
+
+		const message = text || "No message available";
+		const convert = new Convert();
+
+		// Convert ANSI codes to HTML, then minimize consecutive newlines
+		return convert.toHtml(message).replace(/\n{2,}/g, "\n");
+	},
+};
+
+/**
+ * Filters an array of tests to only those that have failed, then limits the result to a specified number.
+ * Perfect for displaying "Top N failed tests" in dashboards and summary reports.
+ *
+ * @example
+ * {{#each (limitFailedTests tests 5)}}
+ *   <div class="failed-test">{{this.name}}</div>
+ * {{/each}}
+ * <!-- Shows up to 5 failed tests -->
+ *
+ * {{#each (limitFailedTests suite.tests 3)}}
+ *   {{this.name}} - {{this.status}}
+ * {{/each}}
+ * <!-- Shows first 3 failed tests from a suite -->
+ *
+ * @param {unknown} tests - An array of Test objects from CTRF report.
+ * @param {unknown} limit - The maximum number of failed tests to return.
+ * @returns {Test[]} An array of failed tests up to the specified limit.
+ *  Use to create "Top failed tests" sections in test reports and dashboards.
+ */
+export const limitFailedTestsHelper: Helper = {
+	name: "limitFailedTests",
+	category: "CTRF",
+	fn: (tests: unknown, limit: unknown) => {
+		if (!Array.isArray(tests)) {
+			return [];
+		}
+
+		// Parse limit with default fallback
+		const maxLimit =
+			typeof limit === "number"
+				? limit
+				: typeof limit === "string"
+					? parseInt(limit, 10)
+					: 10;
+
+		// Ensure limit is a positive number
+		const validLimit = Number.isNaN(maxLimit) || maxLimit < 0 ? 10 : maxLimit;
+
+		// Filter to failed tests and limit the results
+		return tests
+			.filter(
+				(test) =>
+					typeof test === "object" &&
+					test !== null &&
+					"status" in test &&
+					test.status === "failed",
+			)
+			.slice(0, validLimit);
+	},
+};
+
+/**
+ * Retrieves an emoji representation for a given test state or category.
+ * Useful for adding visual flair to CTRF test reports, dashboards, and summaries.
+ *
+ * @example
+ * {{getCtrfEmoji "passed"}}
+ * <!-- results in: "✅" -->
+ *
+ * {{getCtrfEmoji "failed"}}
+ * <!-- results in: "❌" -->
+ *
+ * {{getCtrfEmoji "flaky"}}
+ * <!-- results in: "🍂" -->
+ *
+ * {{getCtrfEmoji "build"}}
+ * <!-- results in: "🏗️" -->
+ *
+ * **Use with CTRF templates**: Perfect for creating visually appealing test summaries, status indicators, and dashboard elements that make test reports more engaging and easier to scan.
+ *
+ * @param {unknown} status - The test state or category to get an emoji for.
+ * @returns {string} The emoji corresponding to the test state or category.
+ */
+export const getCtrfEmojiHelper: Helper = {
+	name: "getCtrfEmoji",
+	category: "CTRF",
+	fn: (status: unknown): string => {
+		if (typeof status !== "string") {
+			return "❓";
+		}
+
+		switch (status) {
+			case "passed":
+				return "✅";
+			case "failed":
+				return "❌";
+			case "skipped":
+				return "⏭️";
+			case "pending":
+				return "⏳";
+			case "other":
+				return "❓";
+			case "build":
+				return "🏗️";
+			case "duration":
+				return "⏱️";
+			case "flaky":
+				return "🍂";
+			case "tests":
+				return "📝";
+			case "result":
+				return "🧪";
+			case "warning":
+				return "⚠️";
+			default:
+				return "❓";
+		}
+	},
 };
 
 export const ctrfHelpers: Helper[] = [
@@ -369,8 +563,12 @@ export const ctrfHelpers: Helper[] = [
 	filterPassedTestsHelper,
 	filterFailedTestsHelper,
 	filterOtherTestsHelper,
+	limitFailedTestsHelper,
 	countFlakyTestsHelper,
 	anyFlakyTestsHelper,
 	formatDurationFromTimesHelper,
 	formatDurationHelper,
+	formatTestMessageHelper,
+	formatTestMessagePreCodeHelper,
+	getCtrfEmojiHelper,
 ];

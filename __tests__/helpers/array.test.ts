@@ -17,6 +17,7 @@ import {
 	mapHelper,
 	pluckHelper,
 	reverseHelper,
+	sliceHelper,
 	someHelper,
 	sortByHelper,
 	sortHelper,
@@ -184,6 +185,74 @@ describe("lengthHelper", () => {
 describe("lengthEqualHelper", () => {
 	it("is alias for equalsLengthHelper", () => {
 		expect(lengthEqualHelper).toBe(equalsLengthHelper);
+	});
+});
+
+describe("sliceHelper", () => {
+	it("returns slice of array as regular helper", () => {
+		const array = ["a", "b", "c", "d", "e"];
+		expect(sliceHelper.fn(array, 1, 4)).toEqual(["b", "c", "d"]);
+	});
+
+	it("works as block helper with Handlebars context", () => {
+		const array = ["item1", "item2", "item3", "item4"];
+		const mockOptions = {
+			fn: (item: string) => `<li>${item}</li>`,
+		};
+		const result = sliceHelper.fn(array, 1, 3, mockOptions);
+		expect(result).toBe("<li>item2</li><li>item3</li>");
+	});
+
+	it("handles string indices", () => {
+		const array = [1, 2, 3, 4, 5];
+		expect(sliceHelper.fn(array, "1", "4")).toEqual([2, 3, 4]);
+	});
+
+	it("uses defaults for invalid indices", () => {
+		const array = ["a", "b", "c"];
+		expect(sliceHelper.fn(array, "invalid", "also_invalid")).toEqual(["a", "b", "c"]);
+		expect(sliceHelper.fn(array, 0, "invalid")).toEqual(["a", "b", "c"]);
+	});
+
+	it("returns empty string for non-array input", () => {
+		expect(sliceHelper.fn(null, 0, 2)).toBe("");
+		expect(sliceHelper.fn("not an array", 0, 2)).toBe("");
+	});
+
+	it("handles edge cases with indices", () => {
+		const array = ["a", "b", "c"];
+		// Start index beyond array length
+		expect(sliceHelper.fn(array, 5, 10)).toEqual([]);
+		// Negative start index with positive end (should return empty like native slice)
+		expect(sliceHelper.fn(array, -1, 2)).toEqual([]);
+		// Negative start index without end (should return last item)
+		expect(sliceHelper.fn(array, -1)).toEqual(["c"]);
+		// Negative indices both (should work like native slice)
+		expect(sliceHelper.fn(array, -2, -1)).toEqual(["b"]);
+		// End index beyond array length
+		expect(sliceHelper.fn(array, 0, 10)).toEqual(["a", "b", "c"]);
+	});
+
+	it("works for pagination scenarios", () => {
+		const testResults = [
+			{ name: "test1" }, { name: "test2" }, { name: "test3" },
+			{ name: "test4" }, { name: "test5" }, { name: "test6" }
+		];
+		
+		// Page 1: items 0-2
+		expect(sliceHelper.fn(testResults, 0, 3)).toEqual([
+			{ name: "test1" }, { name: "test2" }, { name: "test3" }
+		]);
+		
+		// Page 2: items 3-5
+		expect(sliceHelper.fn(testResults, 3, 6)).toEqual([
+			{ name: "test4" }, { name: "test5" }, { name: "test6" }
+		]);
+	});
+
+	it("should be categorized as Array helper", () => {
+		expect(sliceHelper.category).toBe("Array");
+		expect(sliceHelper.name).toBe("slice");
 	});
 });
 

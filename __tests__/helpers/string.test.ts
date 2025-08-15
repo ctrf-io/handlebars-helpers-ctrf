@@ -1,5 +1,6 @@
 import type { Helper } from "../../src/helper-registry";
 import {
+	ansiToHtmlHelper,
 	appendHelper,
 	camelCaseHelper,
 	capitalizeAllHelper,
@@ -10,6 +11,7 @@ import {
 	dotCaseHelper,
 	downCaseHelper,
 	ellipsisHelper,
+	escapeMarkdownHelper,
 	hyphenateHelper,
 	isStringHelper,
 	lowerCaseHelper,
@@ -25,9 +27,12 @@ import {
 	replaceHelper,
 	reverseHelper,
 	sentenceHelper,
+	sliceStringHelper,
 	snakeCaseHelper,
 	splitHelper,
+	splitLinesHelper,
 	startsWithHelper,
+	stripAnsiHelper,
 	stringHelpers,
 	titleizeHelper,
 	trimHelper,
@@ -224,6 +229,85 @@ describe("sentenceHelper", () => {
 	});
 });
 
+describe("sliceStringHelper", () => {
+	it("should extract substring with start and end indices", () => {
+		expect(sliceStringHelper.fn("d9a40a70dd26e3b309e9d106adaca2417d4ffb1e", 0, 7)).toBe("d9a40a7");
+		expect(sliceStringHelper.fn("User Login Test", 5, 10)).toBe("Login");
+		expect(sliceStringHelper.fn("Hello World", 0, 5)).toBe("Hello");
+		expect(sliceStringHelper.fn("Test Case", 5, 9)).toBe("Case");
+	});
+
+	it("should extract substring from start to end when end is omitted", () => {
+		expect(sliceStringHelper.fn("d9a40a70dd26e3b309e9d106adaca2417d4ffb1e", 8)).toBe("dd26e3b309e9d106adaca2417d4ffb1e");
+		expect(sliceStringHelper.fn("User Login Test", 5)).toBe("Login Test");
+		expect(sliceStringHelper.fn("Hello World", 6)).toBe("World");
+	});
+
+	it("should handle string indices", () => {
+		expect(sliceStringHelper.fn("Test String", "2", "6")).toBe("st S");
+		expect(sliceStringHelper.fn("Hello World", "0", "5")).toBe("Hello");
+		expect(sliceStringHelper.fn("API Test", "4")).toBe("Test");
+	});
+
+	it("should handle commit hash scenarios", () => {
+		const commitHash = "a1b2c3d4e5f6789012345678901234567890abcd";
+		expect(sliceStringHelper.fn(commitHash, 0, 8)).toBe("a1b2c3d4");
+		expect(sliceStringHelper.fn(commitHash, 0, 12)).toBe("a1b2c3d4e5f6");
+		expect(sliceStringHelper.fn(commitHash, 8, 16)).toBe("e5f67890");
+	});
+
+	it("should handle test ID extraction", () => {
+		expect(sliceStringHelper.fn("TEST_USER_LOGIN_001", 5, 9)).toBe("USER");
+		expect(sliceStringHelper.fn("API_ENDPOINT_VALIDATION_TEST", 0, 3)).toBe("API");
+		expect(sliceStringHelper.fn("DB_CONNECTION_TEST_SUITE", 14, 18)).toBe("TEST");
+	});
+
+	it("should handle edge cases", () => {
+		expect(sliceStringHelper.fn("", 0, 5)).toBe("");
+		expect(sliceStringHelper.fn("Test", 0, 0)).toBe("");
+		expect(sliceStringHelper.fn("Test", 2, 2)).toBe("");
+		expect(sliceStringHelper.fn("Test", 10, 20)).toBe("");
+		expect(sliceStringHelper.fn("Test", -2, 2)).toBe(""); // -2 becomes index 2, slice(2,2) = ""
+	});
+
+	it("should handle negative indices like native slice", () => {
+		expect(sliceStringHelper.fn("Hello World", -5, -1)).toBe("Worl");
+		expect(sliceStringHelper.fn("Test Case", -4)).toBe("Case");
+		expect(sliceStringHelper.fn("User Login", -5, -1)).toBe("Logi");
+	});
+
+	it("should handle invalid indices gracefully", () => {
+		expect(sliceStringHelper.fn("Test String", "invalid", 5)).toBe("Test ");
+		expect(sliceStringHelper.fn("Test String", 0, "invalid")).toBe("Test String");
+		expect(sliceStringHelper.fn("Test String", "abc", "def")).toBe("Test String");
+	});
+
+	it("should handle non-string inputs", () => {
+		expect(sliceStringHelper.fn(null as unknown, 0, 5)).toBe("");
+		expect(sliceStringHelper.fn(undefined as unknown, 0, 5)).toBe("");
+		expect(sliceStringHelper.fn(123 as unknown, 0, 2)).toBe("");
+		expect(sliceStringHelper.fn({} as unknown, 0, 5)).toBe("");
+	});
+
+	it("should handle CTRF test scenarios", () => {
+		expect(sliceStringHelper.fn("test_user_authentication_flow", 5, 9)).toBe("user");
+		expect(sliceStringHelper.fn("FAILED_API_ENDPOINT_TEST", 7, 10)).toBe("API");
+		expect(sliceStringHelper.fn("integration_test_suite_v2.1.0", 12, 16)).toBe("test");
+		expect(sliceStringHelper.fn("error_validation_check_001", 0, 5)).toBe("error");
+	});
+
+	it("should handle file path extraction", () => {
+		expect(sliceStringHelper.fn("src/components/UserLogin.tsx", 4, 14)).toBe("components");
+		expect(sliceStringHelper.fn("/path/to/test/file.js", 9, 13)).toBe("test");
+		expect(sliceStringHelper.fn("tests/unit/auth.spec.ts", 11, 15)).toBe("auth");
+	});
+
+	it("should be categorized as String helper", () => {
+		expect(sliceStringHelper.category).toBe("String");
+		expect(sliceStringHelper.name).toBe("sliceString");
+	});
+});
+
 describe("snakeCaseHelper", () => {
 	it("should convert to snake_case", () => {
 		expect(snakeCaseHelper.fn("User Login Test")).toBe("user_login_test");
@@ -268,6 +352,107 @@ describe("splitHelper", () => {
 	it("should return array for non-string input", () => {
 		expect(splitHelper.fn(null as unknown, ",")).toEqual([]);
 		expect(splitHelper.fn("test", null as unknown)).toEqual(["test"]);
+	});
+});
+
+describe("splitLinesHelper", () => {
+	it("should split multiline text into lines, removing empty lines", () => {
+		expect(splitLinesHelper.fn("Line one\nLine two\nLine three")).toEqual([
+			"Line one",
+			"Line two", 
+			"Line three"
+		]);
+		
+		expect(splitLinesHelper.fn("Line one\n\nLine two\nLine three")).toEqual([
+			"Line one",
+			"Line two",
+			"Line three"
+		]);
+	});
+
+	it("should handle various types of empty lines", () => {
+		expect(splitLinesHelper.fn("Line 1\n\nLine 3\n   \nLine 5")).toEqual([
+			"Line 1",
+			"Line 3",
+			"Line 5"
+		]);
+		
+		expect(splitLinesHelper.fn("Line 1\n\t\nLine 3\n \n \nLine 6")).toEqual([
+			"Line 1",
+			"Line 3",
+			"Line 6"
+		]);
+	});
+
+	it("should handle stack traces and error messages", () => {
+		const stackTrace = "Error: Test failed\n  at test.js:10:5\n\n  at runner.js:45:12\n  at main.js:20:3";
+		expect(splitLinesHelper.fn(stackTrace)).toEqual([
+			"Error: Test failed",
+			"  at test.js:10:5",
+			"  at runner.js:45:12",
+			"  at main.js:20:3"
+		]);
+	});
+
+	it("should handle console output with empty lines", () => {
+		const consoleOutput = "Starting tests...\n\n✓ Test 1 passed\n✗ Test 2 failed\n\nTest run complete";
+		expect(splitLinesHelper.fn(consoleOutput)).toEqual([
+			"Starting tests...",
+			"✓ Test 1 passed",
+			"✗ Test 2 failed",
+			"Test run complete"
+		]);
+	});
+
+	it("should handle CTRF test scenarios", () => {
+		const testOutput = "[PASSED] User login test\n\n[FAILED] Password validation\n  Expected: valid\n  Actual: invalid\n\n[SKIPPED] OAuth integration";
+		expect(splitLinesHelper.fn(testOutput)).toEqual([
+			"[PASSED] User login test",
+			"[FAILED] Password validation",
+			"  Expected: valid",
+			"  Actual: invalid",
+			"[SKIPPED] OAuth integration"
+		]);
+	});
+
+	it("should handle edge cases", () => {
+		expect(splitLinesHelper.fn("")).toEqual([]);
+		expect(splitLinesHelper.fn("Single line")).toEqual(["Single line"]);
+		expect(splitLinesHelper.fn("\n\n\n")).toEqual([]);
+		expect(splitLinesHelper.fn("   \n  \n   \n")).toEqual([]);
+		expect(splitLinesHelper.fn("\nStart\n\nEnd\n")).toEqual(["Start", "End"]);
+	});
+
+	it("should handle non-string inputs", () => {
+		expect(splitLinesHelper.fn(null as unknown)).toEqual([]);
+		expect(splitLinesHelper.fn(undefined as unknown)).toEqual([]);
+		expect(splitLinesHelper.fn(123 as unknown)).toEqual([]);
+		expect(splitLinesHelper.fn({} as unknown)).toEqual([]);
+	});
+
+	it("should handle multiline error messages", () => {
+		const errorMessage = "AssertionError: expected true to be false\n\n    at Context.it (test.js:15:8)\n    at Test.run (runner.js:45:12)\n\n    + expected\n    - actual\n\n    - true\n    + false";
+		expect(splitLinesHelper.fn(errorMessage)).toEqual([
+			"AssertionError: expected true to be false",
+			"    at Context.it (test.js:15:8)",
+			"    at Test.run (runner.js:45:12)",
+			"    + expected",
+			"    - actual",
+			"    - true",
+			"    + false"
+		]);
+	});
+
+	it("should preserve line content with leading/trailing spaces (but filter empty lines)", () => {
+		expect(splitLinesHelper.fn("  Line with spaces  \n\n  Another line  ")).toEqual([
+			"  Line with spaces  ",
+			"  Another line  "
+		]);
+	});
+
+	it("should be categorized as String helper", () => {
+		expect(splitLinesHelper.category).toBe("String");
+		expect(splitLinesHelper.name).toBe("splitLines");
 	});
 });
 
@@ -940,6 +1125,71 @@ describe("String Helpers", () => {
 		});
 	});
 
+	describe("escapeMarkdownHelper", () => {
+		it("should escape basic Markdown characters", () => {
+			expect(escapeMarkdownHelper.fn("Hello *world*")).toBe("Hello \\*world\\*");
+			expect(escapeMarkdownHelper.fn("Text with _italics_")).toBe("Text with \\_italics\\_");
+			expect(escapeMarkdownHelper.fn("Link [text](url)")).toBe("Link \\[text\\]\\(url\\)");
+		});
+
+		it("should escape all special Markdown characters", () => {
+			expect(escapeMarkdownHelper.fn("\\")).toBe("\\\\");
+			expect(escapeMarkdownHelper.fn("*")).toBe("\\*");
+			expect(escapeMarkdownHelper.fn("_")).toBe("\\_");
+			expect(escapeMarkdownHelper.fn("{}")).toBe("\\{\\}");
+			expect(escapeMarkdownHelper.fn("[]")).toBe("\\[\\]");
+			expect(escapeMarkdownHelper.fn("()")).toBe("\\(\\)");
+			expect(escapeMarkdownHelper.fn("#")).toBe("\\#");
+			expect(escapeMarkdownHelper.fn("+")).toBe("\\+");
+			expect(escapeMarkdownHelper.fn("-")).toBe("\\-");
+			expect(escapeMarkdownHelper.fn(".")).toBe("\\.");
+			expect(escapeMarkdownHelper.fn("!")).toBe("\\!");
+		});
+
+		it("should handle complex test names and file paths", () => {
+			expect(escapeMarkdownHelper.fn("test_[important]_case")).toBe("test\\_\\[important\\]\\_case");
+			expect(escapeMarkdownHelper.fn("src/utils/*.js")).toBe("src/utils/\\*\\.js");
+			expect(escapeMarkdownHelper.fn("User#123_login-test")).toBe("User\\#123\\_login\\-test");
+		});
+
+		it("should handle error messages with special characters", () => {
+			expect(escapeMarkdownHelper.fn("Expected *value* but got null")).toBe("Expected \\*value\\* but got null");
+			expect(escapeMarkdownHelper.fn("Function() { return true; }")).toBe("Function\\(\\) \\{ return true; \\}");
+			expect(escapeMarkdownHelper.fn("Array[0] is undefined!")).toBe("Array\\[0\\] is undefined\\!");
+		});
+
+		it("should handle CTRF test scenarios", () => {
+			expect(escapeMarkdownHelper.fn("Test_Case_*_Wildcard")).toBe("Test\\_Case\\_\\*\\_Wildcard");
+			expect(escapeMarkdownHelper.fn("[PASSED] User login test")).toBe("\\[PASSED\\] User login test");
+			expect(escapeMarkdownHelper.fn("# Header Test Case")).toBe("\\# Header Test Case");
+			expect(escapeMarkdownHelper.fn("Error! Connection failed.")).toBe("Error\\! Connection failed\\.");
+		});
+
+		it("should handle mixed Markdown formatting", () => {
+			expect(escapeMarkdownHelper.fn("**bold** and *italic* text")).toBe("\\*\\*bold\\*\\* and \\*italic\\* text");
+			expect(escapeMarkdownHelper.fn("# Header with [link](url)")).toBe("\\# Header with \\[link\\]\\(url\\)");
+			expect(escapeMarkdownHelper.fn("- List item with _emphasis_")).toBe("\\- List item with \\_emphasis\\_");
+		});
+
+		it("should handle non-string inputs", () => {
+			expect(escapeMarkdownHelper.fn(null as unknown)).toBe("");
+			expect(escapeMarkdownHelper.fn(undefined as unknown)).toBe("");
+			expect(escapeMarkdownHelper.fn(123 as unknown)).toBe("");
+			expect(escapeMarkdownHelper.fn({} as unknown)).toBe("");
+		});
+
+		it("should handle empty and edge case strings", () => {
+			expect(escapeMarkdownHelper.fn("")).toBe("");
+			expect(escapeMarkdownHelper.fn("No special chars")).toBe("No special chars");
+			expect(escapeMarkdownHelper.fn("   ")).toBe("   ");
+		});
+
+		it("should be categorized as String helper", () => {
+			expect(escapeMarkdownHelper.category).toBe("String");
+			expect(escapeMarkdownHelper.name).toBe("escapeMarkdown");
+		});
+	});
+
 	describe("hyphenateHelper", () => {
 		it("should replace spaces with hyphens", () => {
 			expect(hyphenateHelper.fn("User Login Test")).toBe("User-Login-Test");
@@ -1192,10 +1442,103 @@ describe("String Helpers", () => {
 		});
 	});
 
+	describe("stripAnsiHelper", () => {
+		it("should strip basic ANSI escape codes", () => {
+			expect(stripAnsiHelper.fn("Hello \u001b[31mRed\u001b[0m")).toBe("Hello Red");
+			expect(stripAnsiHelper.fn("\u001b[32mGreen text\u001b[0m")).toBe("Green text");
+			expect(stripAnsiHelper.fn("\u001b[1mBold\u001b[0m")).toBe("Bold");
+		});
+
+		it("should strip multiple ANSI codes", () => {
+			expect(stripAnsiHelper.fn("\u001b[31m\u001b[1mBold Red\u001b[0m\u001b[0m")).toBe("Bold Red");
+			expect(stripAnsiHelper.fn("\u001b[32mGreen \u001b[33mYellow\u001b[0m")).toBe("Green Yellow");
+		});
+
+		it("should handle complex ANSI sequences", () => {
+			expect(stripAnsiHelper.fn("\u001b[38;5;196mHello\u001b[0m")).toBe("Hello");
+			expect(stripAnsiHelper.fn("\u001b[48;5;21mBackground\u001b[0m")).toBe("Background");
+		});
+
+		it("should handle strings without ANSI codes", () => {
+			expect(stripAnsiHelper.fn("Plain text")).toBe("Plain text");
+			expect(stripAnsiHelper.fn("")).toBe("");
+		});
+
+		it("should handle edge cases", () => {
+			expect(stripAnsiHelper.fn("Text with \u001b[0m reset only")).toBe("Text with  reset only");
+			expect(stripAnsiHelper.fn("\u001b[J Clear screen")).toBe(" Clear screen");
+		});
+
+		it("should handle non-string inputs", () => {
+			expect(stripAnsiHelper.fn(null as unknown)).toBe("");
+			expect(stripAnsiHelper.fn(undefined as unknown)).toBe("");
+			expect(stripAnsiHelper.fn(123 as unknown)).toBe("");
+			expect(stripAnsiHelper.fn({} as unknown)).toBe("");
+		});
+
+		it("should handle CTRF test scenarios", () => {
+			expect(stripAnsiHelper.fn("Test \u001b[32mPASSED\u001b[0m")).toBe("Test PASSED");
+			expect(stripAnsiHelper.fn("Test \u001b[31mFAILED\u001b[0m")).toBe("Test FAILED");
+			expect(stripAnsiHelper.fn("\u001b[33mWARNING:\u001b[0m Test skipped")).toBe("WARNING: Test skipped");
+		});
+	});
+
+	describe("ansiToHtmlHelper", () => {
+		it("should convert basic ANSI escape codes to HTML", () => {
+			expect(ansiToHtmlHelper.fn("Hello \u001b[31mRed\u001b[0m")).toBe("Hello <span style=\"color:#A00\">Red</span>");
+			expect(ansiToHtmlHelper.fn("\u001b[32mGreen text\u001b[0m")).toBe("<span style=\"color:#0A0\">Green text</span>");
+			expect(ansiToHtmlHelper.fn("\u001b[1mBold\u001b[0m")).toBe("<b>Bold</b>");
+		});
+
+		it("should convert multiple ANSI codes to HTML", () => {
+			expect(ansiToHtmlHelper.fn("\u001b[31m\u001b[1mBold Red\u001b[0m")).toBe("<span style=\"color:#A00\"><b>Bold Red</b></span>");
+			expect(ansiToHtmlHelper.fn("\u001b[32mGreen \u001b[33mYellow\u001b[0m")).toContain("Green");
+			expect(ansiToHtmlHelper.fn("\u001b[32mGreen \u001b[33mYellow\u001b[0m")).toContain("Yellow");
+		});
+
+		it("should handle complex ANSI sequences", () => {
+			const result = ansiToHtmlHelper.fn("\u001b[38;5;196mHello\u001b[0m");
+			expect(result).toContain("<span");
+			expect(result).toContain("Hello");
+			expect(result).toContain("</span>");
+		});
+
+		it("should handle strings without ANSI codes", () => {
+			expect(ansiToHtmlHelper.fn("Plain text")).toBe("Plain text");
+			expect(ansiToHtmlHelper.fn("")).toBe("");
+		});
+
+		it("should handle non-string inputs", () => {
+			expect(ansiToHtmlHelper.fn(null as unknown)).toBe("");
+			expect(ansiToHtmlHelper.fn(undefined as unknown)).toBe("");
+			expect(ansiToHtmlHelper.fn(123 as unknown)).toBe("");
+			expect(ansiToHtmlHelper.fn({} as unknown)).toBe("");
+		});
+
+		it("should handle CTRF test scenarios", () => {
+			expect(ansiToHtmlHelper.fn("Test \u001b[32mPASSED\u001b[0m")).toBe("Test <span style=\"color:#0A0\">PASSED</span>");
+			expect(ansiToHtmlHelper.fn("Test \u001b[31mFAILED\u001b[0m")).toBe("Test <span style=\"color:#A00\">FAILED</span>");
+			expect(ansiToHtmlHelper.fn("\u001b[33mWARNING:\u001b[0m Test skipped")).toBe("<span style=\"color:#A50\">WARNING:</span> Test skipped");
+		});
+
+		it("should handle HTML characters without escaping", () => {
+			expect(ansiToHtmlHelper.fn("Test & <script>")).toBe("Test & <script>");
+			expect(ansiToHtmlHelper.fn("Quote \"test\"")).toBe("Quote \"test\"");
+		});
+
+		it("should convert underline and other styles", () => {
+			expect(ansiToHtmlHelper.fn("\u001b[4mUnderlined\u001b[0m")).toBe("<u>Underlined</u>");
+			expect(ansiToHtmlHelper.fn("\u001b[3mItalic\u001b[0m")).toBe("<i>Italic</i>");
+		});
+	});
+
+
+
 	describe("stringHelpers export", () => {
 		it("should contain all string helpers", () => {
-			expect(stringHelpers).toHaveLength(36);
+			expect(stringHelpers).toHaveLength(41);
 			expect(stringHelpers.map((h: Helper) => h.name)).toEqual([
+				"ansiToHtml",
 				"append",
 				"camelcase",
 				"capitalize",
@@ -1206,6 +1549,7 @@ describe("String Helpers", () => {
 				"dotcase",
 				"downcase",
 				"ellipsis",
+				"escapeMarkdown",
 				"hyphenate",
 				"isString",
 				"lowercase",
@@ -1221,9 +1565,12 @@ describe("String Helpers", () => {
 				"replaceFirst",
 				"reverse",
 				"sentence",
+				"sliceString",
 				"snakecase",
 				"split",
+				"splitLines",
 				"startsWith",
+				"stripAnsi",
 				"titleize",
 				"trim",
 				"trimLeft",

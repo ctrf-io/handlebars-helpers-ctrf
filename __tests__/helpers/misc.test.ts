@@ -86,4 +86,6 @@ describe("misc helpers", () => {
 			expect(withHashHelper.fn.call({}, options)).toBe("");
 		});
 	});
+
+
 });

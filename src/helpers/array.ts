@@ -1,4 +1,4 @@
-import type { Helper } from "../helper-registry";
+import type { Helper } from "../helper-registry.js";
 
 /**
  * Returns all of the items in an array after the specified index. Opposite of before.
@@ -389,6 +389,54 @@ export const lastHelper: Helper = {
 		if (n == null) return arr[arr.length - 1];
 		const count = typeof n === "number" ? n : parseInt(String(n), 10);
 		return arr.slice(-count);
+	},
+};
+
+/**
+ * Returns a slice of an array from the specified start index to the end index.
+ * Useful for pagination, limiting displayed items, or working with specific ranges of test results.
+ *
+ * @example
+ * {{#slice test.results 1 4}}
+ *   <li>{{this.name}}</li>
+ * {{/slice}}
+ * <!-- given that test.results has 10 items -->
+ * <!-- renders items at indices 1, 2, and 3 (end index is exclusive) -->
+ *
+ * @param {unknown} array - The array to be sliced.
+ * @param {unknown} start - The start index for the slice.
+ * @param {unknown} end - The end index for the slice (exclusive).
+ * @param {object} options - Handlebars options object, including the block to render.
+ * @returns {string} A concatenated string of all rendered items within the slice.
+ */
+export const sliceHelper: Helper = {
+	name: "slice",
+	category: "Array",
+	// biome-ignore lint/suspicious/noExplicitAny: type is unknown
+	fn: (array: unknown, start: unknown, end: unknown, options: any) => {
+		if (!Array.isArray(array)) return "";
+
+		const startIdx =
+			typeof start === "number"
+				? start
+				: Number.isNaN(parseInt(String(start), 10))
+					? 0
+					: parseInt(String(start), 10);
+		const endIdx =
+			typeof end === "number"
+				? end
+				: Number.isNaN(parseInt(String(end), 10))
+					? array.length
+					: parseInt(String(end), 10);
+
+		// If called as a block helper
+		if (options && typeof options.fn === "function") {
+			const slicedArray = array.slice(startIdx, endIdx);
+			return slicedArray.map((item: unknown) => options.fn(item)).join("");
+		}
+
+		// If called as a regular helper, just return the sliced array
+		return array.slice(startIdx, endIdx);
 	},
 };
 
@@ -855,6 +903,7 @@ export const arrayHelpers: Helper[] = [
 	mapHelper,
 	pluckHelper,
 	reverseHelper,
+	sliceHelper,
 	someHelper,
 	sortHelper,
 	sortByHelper,

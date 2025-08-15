@@ -1,6 +1,6 @@
 {
 	"name": "handlebars-helpers-ctrf",
-	"version": "0.0.4-next.8",
+	"version": "0.0.4-next.11",
 	"description": "A collection of Handlebars helpers for working with Common Test Report Format",
 	"type": "module",
 	"main": "dist/index.js",
@@ -10,7 +10,6 @@
 	},
 	"scripts": {
 		"build": "tsc",
-		"postbuild": "node scripts/esm-compatibility.js",
 		"test": "jest",
 		"test:watch": "jest --watch",
 		"test:coverage": "jest --coverage",
@@ -24,7 +23,8 @@
 		"dev:helpers": "tsx --watch src/test-runner.ts",
 		"docs": "typedoc",
 		"docs:watch": "typedoc --watch",
-		"docs:readme": "typedoc --plugin typedoc-plugin-markdown --out ./temp-docs && node scripts/update-readme.js"
+		"docs:readme": "typedoc --plugin typedoc-plugin-markdown --out ./temp-docs && node scripts/update-readme.js",
+		"all": "npm run docs && npm run docs:readme && npm run test && npm run lint && npm run build"
 	},
 	"files": [
 		"dist/",
@@ -36,6 +36,7 @@
 	"author": "Matthew Thomas",
 	"license": "MIT",
 	"dependencies": {
+		"ansi-to-html": "^0.7.2",
 		"ctrf": "^0.0.13-next.0",
 		"handlebars": "^4.7.8",
 		"minimatch": "^10.0.3"
