@@ -1,6 +1,6 @@
 {
 	"name": "handlebars-helpers-ctrf",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"description": "A collection of Handlebars helpers for working with Common Test Report Format",
 	"type": "module",
 	"main": "dist/index.js",
