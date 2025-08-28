@@ -22,9 +22,33 @@ describe("CTRF Helpers", () => {
 			status: "passed",
 			duration: 1000,
 			flaky: false,
-			extra: {
-				flakyRate: 0.0,
-				failRate: 0.1,
+			insights: {
+				flakyRate: {
+					current: 0.0,
+					previous: 0.0,
+					change: 0.0,
+				},
+				failRate: {
+					current: 0.1,
+					previous: 0.1,
+					change: 0.0,
+				},
+				skippedRate: {
+					current: 0.0,
+					previous: 0.0,
+					change: 0.0,
+				},
+				averageTestDuration: {
+					current: 1000,
+					previous: 1000,
+					change: 0,
+				},
+				p95Duration: {
+					current: 1200,
+					previous: 1200,
+					change: 0,
+				},
+				appearsInRuns: 10,
 			},
 		},
 		{
@@ -33,9 +57,33 @@ describe("CTRF Helpers", () => {
 			duration: 2000,
 			message: "Test failed due to timeout",
 			flaky: true,
-			extra: {
-				flakyRate: 0.8,
-				failRate: 0.9,
+			insights: {
+				flakyRate: {
+					current: 0.8,
+					previous: 0.7,
+					change: 0.1,
+				},
+				failRate: {
+					current: 0.9,
+					previous: 0.8,
+					change: 0.1,
+				},
+				skippedRate: {
+					current: 0.0,
+					previous: 0.0,
+					change: 0.0,
+				},
+				averageTestDuration: {
+					current: 2000,
+					previous: 1800,
+					change: 200,
+				},
+				p95Duration: {
+					current: 2500,
+					previous: 2300,
+					change: 200,
+				},
+				appearsInRuns: 10,
 			},
 		},
 		{
@@ -43,9 +91,33 @@ describe("CTRF Helpers", () => {
 			status: "skipped",
 			duration: 0,
 			flaky: false,
-			extra: {
-				flakyRate: 0.0,
-				failRate: 0.0,
+			insights: {
+				flakyRate: {
+					current: 0.0,
+					previous: 0.0,
+					change: 0.0,
+				},
+				failRate: {
+					current: 0.0,
+					previous: 0.0,
+					change: 0.0,
+				},
+				skippedRate: {
+					current: 1.0,
+					previous: 1.0,
+					change: 0.0,
+				},
+				averageTestDuration: {
+					current: 0,
+					previous: 0,
+					change: 0,
+				},
+				p95Duration: {
+					current: 0,
+					previous: 0,
+					change: 0,
+				},
+				appearsInRuns: 5,
 			},
 		},
 		{
@@ -60,9 +132,33 @@ describe("CTRF Helpers", () => {
 			duration: 1500,
 			message: "Assertion error",
 			flaky: true,
-			extra: {
-				flakyRate: 0.6,
-				failRate: 0.7,
+			insights: {
+				flakyRate: {
+					current: 0.6,
+					previous: 0.5,
+					change: 0.1,
+				},
+				failRate: {
+					current: 0.7,
+					previous: 0.6,
+					change: 0.1,
+				},
+				skippedRate: {
+					current: 0.0,
+					previous: 0.0,
+					change: 0.0,
+				},
+				averageTestDuration: {
+					current: 1500,
+					previous: 1400,
+					change: 100,
+				},
+				p95Duration: {
+					current: 1800,
+					previous: 1700,
+					change: 100,
+				},
+				appearsInRuns: 8,
 			},
 		},
 		{
@@ -70,9 +166,33 @@ describe("CTRF Helpers", () => {
 			status: "passed",
 			duration: 800,
 			flaky: false,
-			extra: {
-				flakyRate: 0.1,
-				failRate: 0.2,
+			insights: {
+				flakyRate: {
+					current: 0.1,
+					previous: 0.1,
+					change: 0.0,
+				},
+				failRate: {
+					current: 0.2,
+					previous: 0.2,
+					change: 0.0,
+				},
+				skippedRate: {
+					current: 0.0,
+					previous: 0.0,
+					change: 0.0,
+				},
+				averageTestDuration: {
+					current: 800,
+					previous: 800,
+					change: 0,
+				},
+				p95Duration: {
+					current: 900,
+					previous: 900,
+					change: 0,
+				},
+				appearsInRuns: 10,
 			},
 		},
 	];
@@ -84,11 +204,11 @@ describe("CTRF Helpers", () => {
 			if (Array.isArray(result)) {
 				expect(result).toHaveLength(3); // Tests with flakyRate > 0 (includes 0.1)
 				expect(result[0].name).toBe("Failing Test 1");
-				expect(result[0].extra?.flakyRate).toBe(0.8);
+				expect(result[0].insights?.flakyRate.current).toBe(0.8);
 				expect(result[1].name).toBe("Failing Test 2");
-				expect(result[1].extra?.flakyRate).toBe(0.6);
+				expect(result[1].insights?.flakyRate.current).toBe(0.6);
 				expect(result[2].name).toBe("Passing Test 2");
-				expect(result[2].extra?.flakyRate).toBe(0.1);
+				expect(result[2].insights?.flakyRate.current).toBe(0.1);
 			}
 		});
 
@@ -116,9 +236,9 @@ describe("CTRF Helpers", () => {
 				expect(
 					result.every(
 						(test: Test) =>
-							test.extra?.flakyRate &&
-							typeof test.extra.flakyRate === "number" &&
-							test.extra.flakyRate > 0,
+							test.insights?.flakyRate.current &&
+							typeof test.insights.flakyRate.current === "number" &&
+							test.insights.flakyRate.current > 0,
 					),
 				).toBe(true);
 			}
@@ -392,10 +512,10 @@ describe("CTRF Helpers", () => {
 
 			if (Array.isArray(result)) {
 				expect(result).toHaveLength(4); // Tests with failRate > 0 (includes 0.1 and 0.2)
-				expect(result[0].extra?.failRate).toBe(0.9);
-				expect(result[1].extra?.failRate).toBe(0.7);
-				expect(result[2].extra?.failRate).toBe(0.2);
-				expect(result[3].extra?.failRate).toBe(0.1);
+				expect(result[0].insights?.failRate.current).toBe(0.9);
+				expect(result[1].insights?.failRate.current).toBe(0.7);
+				expect(result[2].insights?.failRate.current).toBe(0.2);
+				expect(result[3].insights?.failRate.current).toBe(0.1);
 			}
 		});
 
@@ -414,9 +534,9 @@ describe("CTRF Helpers", () => {
 				expect(
 					result.every(
 						(test: Test) =>
-							test.extra?.failRate &&
-							typeof test.extra.failRate === "number" &&
-							test.extra.failRate > 0,
+							test.insights?.failRate.current &&
+							typeof test.insights.failRate.current === "number" &&
+							test.insights.failRate.current > 0,
 					),
 				).toBe(true);
 			}
