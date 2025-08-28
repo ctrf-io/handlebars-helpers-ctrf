@@ -9,7 +9,7 @@ import type { Helper } from "../helper-registry.js";
  * @example
  * Most Unreliable Tests:
  * {{#each (sortTestsByFailRate tests)}}
- *   {{this.name}} - Fail Rate: {{this.extra.failRate}}%
+ *   {{this.name}} - Fail Rate: {{this.insights.failRate.current}}%
  * {{/each}}
  *
  * @param {unknown} tests - An array of Test objects from CTRF report.
@@ -29,37 +29,49 @@ export const sortTestsByFailRateHelper: Helper = {
 			(test) =>
 				typeof test === "object" &&
 				test !== null &&
-				"extra" in test &&
-				test.extra &&
-				typeof test.extra === "object" &&
-				test.extra !== null &&
-				"failRate" in test.extra &&
-				typeof test.extra.failRate === "number" &&
-				test.extra.failRate > 0,
+				"insights" in test &&
+				test.insights &&
+				typeof test.insights === "object" &&
+				test.insights !== null &&
+				"failRate" in test.insights &&
+				test.insights.failRate &&
+				typeof test.insights.failRate === "object" &&
+				test.insights.failRate !== null &&
+				"current" in test.insights.failRate &&
+				typeof test.insights.failRate.current === "number" &&
+				test.insights.failRate.current > 0,
 		);
 
 		failedTests.sort((a, b) => {
 			const aRate =
 				typeof a === "object" &&
 				a !== null &&
-				"extra" in a &&
-				a.extra &&
-				typeof a.extra === "object" &&
-				a.extra !== null &&
-				"failRate" in a.extra &&
-				typeof a.extra.failRate === "number"
-					? a.extra.failRate
+				"insights" in a &&
+				a.insights &&
+				typeof a.insights === "object" &&
+				a.insights !== null &&
+				"failRate" in a.insights &&
+				a.insights.failRate &&
+				typeof a.insights.failRate === "object" &&
+				a.insights.failRate !== null &&
+				"current" in a.insights.failRate &&
+				typeof a.insights.failRate.current === "number"
+					? a.insights.failRate.current
 					: 0;
 			const bRate =
 				typeof b === "object" &&
 				b !== null &&
-				"extra" in b &&
-				b.extra &&
-				typeof b.extra === "object" &&
-				b.extra !== null &&
-				"failRate" in b.extra &&
-				typeof b.extra.failRate === "number"
-					? b.extra.failRate
+				"insights" in b &&
+				b.insights &&
+				typeof b.insights === "object" &&
+				b.insights !== null &&
+				"failRate" in b.insights &&
+				b.insights.failRate &&
+				typeof b.insights.failRate === "object" &&
+				b.insights.failRate !== null &&
+				"current" in b.insights.failRate &&
+				typeof b.insights.failRate.current === "number"
+					? b.insights.failRate.current
 					: 0;
 			return bRate - aRate;
 		});
@@ -74,7 +86,7 @@ export const sortTestsByFailRateHelper: Helper = {
  * @example
  * Most Flaky Tests:
  * {{#each (sortTestsByFlakyRate tests)}}
- *   {{this.name}} - Flaky Rate: {{this.extra.flakyRate}}%
+ *   {{this.name}} - Flaky Rate: {{this.insights.flakyRate.current}}%
  * {{/each}}
  *
  * @param {unknown} tests - An array of Test objects from CTRF report.
@@ -94,37 +106,49 @@ export const sortTestsByFlakyRateHelper: Helper = {
 			(test) =>
 				typeof test === "object" &&
 				test !== null &&
-				"extra" in test &&
-				test.extra &&
-				typeof test.extra === "object" &&
-				test.extra !== null &&
-				"flakyRate" in test.extra &&
-				typeof test.extra.flakyRate === "number" &&
-				test.extra.flakyRate > 0,
+				"insights" in test &&
+				test.insights &&
+				typeof test.insights === "object" &&
+				test.insights !== null &&
+				"flakyRate" in test.insights &&
+				test.insights.flakyRate &&
+				typeof test.insights.flakyRate === "object" &&
+				test.insights.flakyRate !== null &&
+				"current" in test.insights.flakyRate &&
+				typeof test.insights.flakyRate.current === "number" &&
+				test.insights.flakyRate.current > 0,
 		);
 
 		flakyTests.sort((a, b) => {
 			const aRate =
 				typeof a === "object" &&
 				a !== null &&
-				"extra" in a &&
-				a.extra &&
-				typeof a.extra === "object" &&
-				a.extra !== null &&
-				"flakyRate" in a.extra &&
-				typeof a.extra.flakyRate === "number"
-					? a.extra.flakyRate
+				"insights" in a &&
+				a.insights &&
+				typeof a.insights === "object" &&
+				a.insights !== null &&
+				"flakyRate" in a.insights &&
+				a.insights.flakyRate &&
+				typeof a.insights.flakyRate === "object" &&
+				a.insights.flakyRate !== null &&
+				"current" in a.insights.flakyRate &&
+				typeof a.insights.flakyRate.current === "number"
+					? a.insights.flakyRate.current
 					: 0;
 			const bRate =
 				typeof b === "object" &&
 				b !== null &&
-				"extra" in b &&
-				b.extra &&
-				typeof b.extra === "object" &&
-				b.extra !== null &&
-				"flakyRate" in b.extra &&
-				typeof b.extra.flakyRate === "number"
-					? b.extra.flakyRate
+				"insights" in b &&
+				b.insights &&
+				typeof b.insights === "object" &&
+				b.insights !== null &&
+				"flakyRate" in b.insights &&
+				b.insights.flakyRate &&
+				typeof b.insights.flakyRate === "object" &&
+				b.insights.flakyRate !== null &&
+				"current" in b.insights.flakyRate &&
+				typeof b.insights.flakyRate.current === "number"
+					? b.insights.flakyRate.current
 					: 0;
 			return bRate - aRate;
 		});
@@ -232,8 +256,8 @@ export const filterOtherTestsHelper: Helper = {
  * Counts the total number of flaky tests in the test results.
  *
  * @example
- * Flaky tests detected: {{countFlaky tests}}
- * {{#if (countFlaky tests)}}⚠️{{/if}}
+ * Flaky tests detected: {{countFlakyTests tests}}
+ * {{#if (countFlakyTests tests)}}⚠️{{/if}}
  *
  * @param {unknown} tests - An array of Test objects from CTRF report.
  * @returns {number} The total number of flaky tests.
