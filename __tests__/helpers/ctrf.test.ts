@@ -25,30 +25,20 @@ describe("CTRF Helpers", () => {
 			insights: {
 				flakyRate: {
 					current: 0.0,
-					previous: 0.0,
+					baseline: 0.0,
 					change: 0.0,
 				},
 				failRate: {
 					current: 0.1,
-					previous: 0.1,
-					change: 0.0,
-				},
-				skippedRate: {
-					current: 0.0,
-					previous: 0.0,
+					baseline: 0.1,
 					change: 0.0,
 				},
 				averageTestDuration: {
 					current: 1000,
-					previous: 1000,
+					baseline	: 1000,
 					change: 0,
 				},
-				p95Duration: {
-					current: 1200,
-					previous: 1200,
-					change: 0,
-				},
-				appearsInRuns: 10,
+				executedInRuns: 10,
 			},
 		},
 		{
@@ -60,30 +50,20 @@ describe("CTRF Helpers", () => {
 			insights: {
 				flakyRate: {
 					current: 0.8,
-					previous: 0.7,
+					baseline: 0.7,
 					change: 0.1,
 				},
 				failRate: {
 					current: 0.9,
-					previous: 0.8,
+					baseline: 0.8,
 					change: 0.1,
-				},
-				skippedRate: {
-					current: 0.0,
-					previous: 0.0,
-					change: 0.0,
 				},
 				averageTestDuration: {
 					current: 2000,
-					previous: 1800,
+					baseline: 1800,
 					change: 200,
 				},
-				p95Duration: {
-					current: 2500,
-					previous: 2300,
-					change: 200,
-				},
-				appearsInRuns: 10,
+				executedInRuns: 10,
 			},
 		},
 		{
@@ -94,30 +74,20 @@ describe("CTRF Helpers", () => {
 			insights: {
 				flakyRate: {
 					current: 0.0,
-					previous: 0.0,
+					baseline: 0.0,
 					change: 0.0,
 				},
 				failRate: {
 					current: 0.0,
-					previous: 0.0,
-					change: 0.0,
-				},
-				skippedRate: {
-					current: 1.0,
-					previous: 1.0,
+					baseline: 0.0,
 					change: 0.0,
 				},
 				averageTestDuration: {
 					current: 0,
-					previous: 0,
+					baseline: 0,
 					change: 0,
 				},
-				p95Duration: {
-					current: 0,
-					previous: 0,
-					change: 0,
-				},
-				appearsInRuns: 5,
+				executedInRuns: 5,
 			},
 		},
 		{
@@ -135,30 +105,20 @@ describe("CTRF Helpers", () => {
 			insights: {
 				flakyRate: {
 					current: 0.6,
-					previous: 0.5,
+					baseline: 0.5,
 					change: 0.1,
 				},
 				failRate: {
 					current: 0.7,
-					previous: 0.6,
+					baseline: 0.6,
 					change: 0.1,
-				},
-				skippedRate: {
-					current: 0.0,
-					previous: 0.0,
-					change: 0.0,
 				},
 				averageTestDuration: {
 					current: 1500,
-					previous: 1400,
+					baseline: 1400,
 					change: 100,
 				},
-				p95Duration: {
-					current: 1800,
-					previous: 1700,
-					change: 100,
-				},
-				appearsInRuns: 8,
+				executedInRuns: 8,
 			},
 		},
 		{
@@ -169,30 +129,20 @@ describe("CTRF Helpers", () => {
 			insights: {
 				flakyRate: {
 					current: 0.1,
-					previous: 0.1,
+					baseline: 0.1,
 					change: 0.0,
 				},
 				failRate: {
 					current: 0.2,
-					previous: 0.2,
-					change: 0.0,
-				},
-				skippedRate: {
-					current: 0.0,
-					previous: 0.0,
+					baseline: 0.2,
 					change: 0.0,
 				},
 				averageTestDuration: {
 					current: 800,
-					previous: 800,
+					baseline: 800,
 					change: 0,
 				},
-				p95Duration: {
-					current: 900,
-					previous: 900,
-					change: 0,
-				},
-				appearsInRuns: 10,
+				executedInRuns: 10,
 			},
 		},
 	];
@@ -236,7 +186,7 @@ describe("CTRF Helpers", () => {
 				expect(
 					result.every(
 						(test: Test) =>
-							test.insights?.flakyRate.current &&
+							test.insights?.flakyRate?.current &&
 							typeof test.insights.flakyRate.current === "number" &&
 							test.insights.flakyRate.current > 0,
 					),
@@ -534,7 +484,7 @@ describe("CTRF Helpers", () => {
 				expect(
 					result.every(
 						(test: Test) =>
-							test.insights?.failRate.current &&
+							test.insights?.failRate?.current &&
 							typeof test.insights.failRate.current === "number" &&
 							test.insights.failRate.current > 0,
 					),
