@@ -71,7 +71,7 @@ Sorts tests by their failure rate in descending order, showing the most unreliab
 ```handlebars
 Most Unreliable Tests:
 {{#each (sortTestsByFailRate tests)}}
-{{this.name}} - Fail Rate: {{this.extra.failRate}}%
+{{this.name}} - Fail Rate: {{this.insights.failRate.current}}%
 {{/each}}
 ```
 
@@ -92,7 +92,7 @@ Sorts tests by their flaky rate in descending order, showing the most flaky test
 ```handlebars
 Most Flaky Tests:
 {{#each (sortTestsByFlakyRate tests)}}
-{{this.name}} - Flaky Rate: {{this.extra.flakyRate}}%
+{{this.name}} - Flaky Rate: {{this.insights.flakyRate.current}}%
 {{/each}}
 ```
 
@@ -174,8 +174,8 @@ Counts the total number of flaky tests in the test results.
 **Example:**
 
 ```handlebars
-Flaky tests detected: {{countFlaky tests}}
-{{#if (countFlaky tests)}}⚠️{{/if}}
+Flaky tests detected: {{countFlakyTests tests}}
+{{#if (countFlakyTests tests)}}⚠️{{/if}}
 ```
 
 ---
