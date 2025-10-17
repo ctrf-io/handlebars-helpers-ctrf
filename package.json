@@ -1,6 +1,6 @@
 {
 	"name": "handlebars-helpers-ctrf",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"description": "A collection of Handlebars helpers for working with Common Test Report Format",
 	"type": "module",
 	"main": "dist/index.js",
@@ -31,7 +31,14 @@
 		"types/",
 		"README.md"
 	],
-	"repository": "github:ctrf-io/handlebars-helpers-ctrf",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ctrf-io/handlebars-helpers-ctrf.git"
+  	},
+	"publishConfig": {
+		"access": "public",
+		"provenance": true
+	},
 	"homepage": "https://ctrf.io",
 	"author": "Matthew Thomas",
 	"license": "MIT",
