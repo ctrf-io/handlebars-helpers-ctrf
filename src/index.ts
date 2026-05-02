@@ -57,26 +57,17 @@ export function loadHelpers(handlebarsInstance: {
 	registry.loadHandlebars(handlebarsInstance);
 }
 
-/**
- * Exports the default helper registry and the HelperRegistry class.
- */
-export { registry, HelperRegistry };
-
 export * from "./helpers/array.js";
 /**
  * Exports all helpers.
  */
 export * from "./helpers/collections.js";
-export * from "./helpers/collections.js";
 export * from "./helpers/comparison.js";
 export * from "./helpers/ctrf.js";
 export * from "./helpers/date.js";
 export * from "./helpers/fs.js";
-export * from "./helpers/fs.js";
 export * from "./helpers/github.js";
 export * from "./helpers/inflection.js";
-export * from "./helpers/inflection.js";
-export * from "./helpers/match.js";
 export * from "./helpers/match.js";
 export * from "./helpers/math.js";
 export * from "./helpers/misc.js";
@@ -126,3 +117,7 @@ export {
 } from "./helpers/string.js";
 export * from "./helpers/timestamp.js";
 export * from "./helpers/url.js";
+/**
+ * Exports the default helper registry and the HelperRegistry class.
+ */
+export { HelperRegistry, registry };
