@@ -1,65 +1,69 @@
 {
-	"name": "handlebars-helpers-ctrf",
-	"version": "0.0.8",
-	"description": "A collection of Handlebars helpers for working with Common Test Report Format",
-	"type": "module",
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
-	"engines": {
-		"node": ">=20.19.0"
-	},
-	"scripts": {
-		"build": "tsc",
-		"test": "jest",
-		"test:watch": "jest --watch",
-		"test:coverage": "jest --coverage",
-		"test:ctrf": "jest src/helpers/__tests__/ctrf.test.ts",
-		"test:string": "jest src/helpers/__tests__/string.test.ts",
-		"test:registry": "jest src/__tests__/helper-registry.test.ts",
-		"test:integration": "jest src/__tests__/integration.test.ts",
-		"test:helpers": "tsx src/test-runner.ts",
-		"lint": "biome check .",
-		"lint:fix": "biome check . --write src/helpers/string.ts",
-		"dev:helpers": "tsx --watch src/test-runner.ts",
-		"docs": "typedoc",
-		"docs:watch": "typedoc --watch",
-		"docs:readme": "typedoc --plugin typedoc-plugin-markdown --out ./temp-docs && node scripts/update-readme.js",
-		"all": "npm run docs && npm run docs:readme && npm run test && npm run lint && npm run build"
-	},
-	"files": [
-		"dist/",
-		"types/",
-		"README.md"
-	],
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/ctrf-io/handlebars-helpers-ctrf.git"
-  	},
-	"publishConfig": {
-		"access": "public",
-		"provenance": true
-	},
-	"homepage": "https://ctrf.io",
-	"author": "Matthew Thomas",
-	"license": "MIT",
-	"dependencies": {
-		"ansi-to-html": "^0.7.2",
-		"ctrf": "^0.2.0",
-		"handlebars": "^4.7.8",
-		"minimatch": "^10.0.3"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "2.4.16",
-		"@types/jest": "^30.0.0",
-		"@types/node": "^25.5.0",
-		"globals": "^17.6.0",
-		"jest": "^30.0.4",
-		"jest-ctrf-json-reporter": "^0.0.11",
-		"jest-environment-node": "^30.0.4",
-		"ts-jest": "^29.4.0",
-		"tsx": "^4.19.2",
-		"typedoc": "^0.28.7",
-		"typedoc-plugin-markdown": "^4.7.0",
-		"typescript": "^5.8.3"
-	}
+  "name": "handlebars-helpers-ctrf",
+  "version": "0.0.8",
+  "description": "A collection of Handlebars helpers for working with Common Test Report Format",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:ctrf": "jest src/helpers/__tests__/ctrf.test.ts",
+    "test:string": "jest src/helpers/__tests__/string.test.ts",
+    "test:registry": "jest src/__tests__/helper-registry.test.ts",
+    "test:integration": "jest src/__tests__/integration.test.ts",
+    "test:helpers": "tsx src/test-runner.ts",
+    "lint": "biome lint --write . --unsafe",
+    "lint:fix": "biome check . --write src/helpers/string.ts",
+    "dev:helpers": "tsx --watch src/test-runner.ts",
+    "docs": "typedoc",
+    "docs:watch": "typedoc --watch",
+    "docs:readme": "typedoc --plugin typedoc-plugin-markdown --out ./temp-docs && node scripts/update-readme.js",
+    "all": "npm run docs && npm run docs:readme && npm run test && npm run lint && npm run build && npm run check",
+    "lint:check": "biome lint .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
+    "check": "biome check ."
+  },
+  "files": [
+    "dist/",
+    "types/",
+    "README.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ctrf-io/handlebars-helpers-ctrf.git"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "homepage": "https://ctrf.io",
+  "author": "Matthew Thomas",
+  "license": "MIT",
+  "dependencies": {
+    "ansi-to-html": "0.7.2",
+    "ctrf": "0.2.1",
+    "handlebars": "4.7.9",
+    "minimatch": "10.2.5"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.16",
+    "@types/jest": "30.0.0",
+    "@types/node": "25.9.2",
+    "globals": "17.6.0",
+    "jest": "30.4.2",
+    "jest-ctrf-json-reporter": "0.0.11",
+    "jest-environment-node": "30.4.1",
+    "ts-jest": "29.4.11",
+    "tsx": "4.22.4",
+    "typedoc": "0.28.19",
+    "typedoc-plugin-markdown": "4.12.0",
+    "typescript": "6.0.3"
+  }
 }
