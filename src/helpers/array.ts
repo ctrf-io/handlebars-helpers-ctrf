@@ -412,8 +412,7 @@ export const lastHelper: Helper = {
 export const sliceHelper: Helper = {
 	name: "slice",
 	category: "Array",
-	// biome-ignore lint/suspicious/noExplicitAny: type is unknown
-	fn: (array: unknown, start: unknown, end: unknown, options: any) => {
+	fn: (array: unknown, start: unknown, end: unknown, options: unknown) => {
 		if (!Array.isArray(array)) return "";
 
 		const startIdx =
@@ -430,9 +429,15 @@ export const sliceHelper: Helper = {
 					: parseInt(String(end), 10);
 
 		// If called as a block helper
-		if (options && typeof options.fn === "function") {
+		if (
+			options &&
+			typeof options === "object" &&
+			"fn" in options &&
+			typeof options.fn === "function"
+		) {
+			const render = options.fn as (item: unknown) => string;
 			const slicedArray = array.slice(startIdx, endIdx);
-			return slicedArray.map((item: unknown) => options.fn(item)).join("");
+			return slicedArray.map((item: unknown) => render(item)).join("");
 		}
 
 		// If called as a regular helper, just return the sliced array

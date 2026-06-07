@@ -1,4 +1,3 @@
-// @ts-ignore - ansi-to-html doesn't have type definitions
 import Convert from "ansi-to-html";
 import type { Helper } from "../helper-registry.js";
 

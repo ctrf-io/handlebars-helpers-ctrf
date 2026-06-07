@@ -1,4 +1,4 @@
-import { basename, dirname, extname, relative, resolve, sep } from "node:path";
+import { basename, dirname, extname, relative, resolve, sep } from "path";
 import type { Helper } from "../helper-registry.js";
 
 /**
