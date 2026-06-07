@@ -10,13 +10,13 @@
   },
   "scripts": {
     "build": "tsc",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "test:ctrf": "jest src/helpers/__tests__/ctrf.test.ts",
-    "test:string": "jest src/helpers/__tests__/string.test.ts",
-    "test:registry": "jest src/__tests__/helper-registry.test.ts",
-    "test:integration": "jest src/__tests__/integration.test.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:ctrf": "vitest run __tests__/helpers/ctrf.test.ts",
+    "test:string": "vitest run __tests__/helpers/string.test.ts",
+    "test:registry": "vitest run __tests__/helper-registry.test.ts",
+    "test:integration": "vitest run __tests__/helper-registry.test.ts",
     "test:helpers": "tsx src/test-runner.ts",
     "lint": "biome lint --write . --unsafe",
     "lint:fix": "biome check . --write src/helpers/string.ts",
@@ -24,7 +24,7 @@
     "docs": "typedoc",
     "docs:watch": "typedoc --watch",
     "docs:readme": "typedoc --plugin typedoc-plugin-markdown --out ./temp-docs && node scripts/update-readme.js",
-    "all": "npm run docs && npm run docs:readme && npm run test && npm run lint && npm run build && npm run check",
+    "all": "npm run lint && npm run format:check && npm run test:coverage && npm run build",
     "lint:check": "biome lint .",
     "format": "biome format --write .",
     "format:check": "biome format .",
@@ -53,17 +53,15 @@
     "minimatch": "10.2.5"
   },
   "devDependencies": {
+    "@d2t/vitest-ctrf-json-reporter": "1.3.0",
     "@biomejs/biome": "2.4.16",
-    "@types/jest": "30.0.0",
     "@types/node": "25.9.2",
+    "@vitest/coverage-v8": "4.1.8",
     "globals": "17.6.0",
-    "jest": "30.4.2",
-    "jest-ctrf-json-reporter": "0.0.11",
-    "jest-environment-node": "30.4.1",
-    "ts-jest": "29.4.11",
     "tsx": "4.22.4",
     "typedoc": "0.28.19",
     "typedoc-plugin-markdown": "4.12.0",
-    "typescript": "6.0.3"
+    "typescript": "6.0.3",
+    "vitest": "4.1.8"
   }
 }
