@@ -53,7 +53,7 @@ describe("HelperRegistry", () => {
 		});
 
 		it("should call init method", () => {
-			const initSpy = jest.spyOn(HelperRegistry.prototype, "init");
+			const initSpy = vi.spyOn(HelperRegistry.prototype, "init");
 			new HelperRegistry();
 			expect(initSpy).toHaveBeenCalled();
 			initSpy.mockRestore();
@@ -102,7 +102,7 @@ describe("HelperRegistry", () => {
 		it("should skip duplicate helpers but register unique ones", () => {
 			registry.register(mockHelpers[0]);
 
-			const registerSpy = jest.spyOn(registry, "register");
+			const registerSpy = vi.spyOn(registry, "register");
 			registry.registerHelpers(mockHelpers);
 
 			expect(registerSpy).toHaveBeenCalledTimes(4);
@@ -195,9 +195,9 @@ describe("HelperRegistry", () => {
 		let mockHandlebars: HandlebarsInstance;
 		beforeEach(() => {
 			mockHandlebars = {
-				registerHelper: jest.fn(),
-				unregisterHelper: jest.fn(),
-				compile: jest.fn(),
+					registerHelper: vi.fn(),
+					unregisterHelper: vi.fn(),
+					compile: vi.fn(),
 				helpers: {},
 			};
 			registry.registerHelpers(mockHelpers);
@@ -228,9 +228,9 @@ describe("HelperRegistry", () => {
 		let mockHandlebars: HandlebarsInstance;
 		beforeEach(() => {
 			mockHandlebars = {
-				registerHelper: jest.fn(),
-				unregisterHelper: jest.fn(),
-				compile: jest.fn(),
+					registerHelper: vi.fn(),
+					unregisterHelper: vi.fn(),
+					compile: vi.fn(),
 				helpers: {},
 			};
 			registry.registerHelpers(mockHelpers);
@@ -256,11 +256,11 @@ describe("HelperRegistry", () => {
 		it("should call unregister before register for each helper", () => {
 			const calls: string[] = [];
 
-			mockHandlebars.unregisterHelper = jest.fn((name: string) => {
+			mockHandlebars.unregisterHelper = vi.fn((name: string) => {
 				calls.push(`unregister-${name}`);
 			});
 
-			mockHandlebars.registerHelper = jest.fn(
+			mockHandlebars.registerHelper = vi.fn(
 				(name: string, _fn: (...args: unknown[]) => unknown) => {
 					calls.push(`register-${name}`);
 				},

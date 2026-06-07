@@ -33,7 +33,7 @@ describe("misc helpers", () => {
 
 	describe("noopHelper", () => {
 		it("renders the block content", () => {
-			const options = { fn: jest.fn().mockReturnValue("block content") };
+			const options = { fn: vi.fn().mockReturnValue("block content") };
 			expect(noopHelper.fn.call({}, options)).toBe("block content");
 			expect(options.fn).toHaveBeenCalledWith({});
 		});
@@ -70,7 +70,7 @@ describe("misc helpers", () => {
 		it("merges hash into context and renders block", () => {
 			const options = {
 				hash: { foo: "bar", count: 3 },
-				fn: jest.fn((ctx) => `Foo: ${ctx.foo}, Count: ${ctx.count}`),
+				fn: vi.fn((ctx) => `Foo: ${ctx.foo}, Count: ${ctx.count}`),
 			};
 			const context = { existing: "value" };
 			expect(withHashHelper.fn.call(context, options)).toBe(
@@ -82,7 +82,7 @@ describe("misc helpers", () => {
 			expect(withHashHelper.fn.call({}, { hash: { foo: 1 } })).toBe("");
 		});
 		it("returns empty string if no hash", () => {
-			const options = { fn: jest.fn() };
+			const options = { fn: vi.fn() };
 			expect(withHashHelper.fn.call({}, options)).toBe("");
 		});
 	});
