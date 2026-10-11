@@ -196,6 +196,31 @@ describe("CTRF Helpers", () => {
 	});
 
 	describe("filterPassedTestsHelper", () => {
+		it("preserves distinct same-name executions and nested attempt identities", () => {
+			const first: Test = {
+				name: "same",
+				status: "passed",
+				duration: 1,
+				testId: "logical",
+				executionId: "execution",
+				attemptId: "final-attempt",
+				retries: 1,
+				flaky: true,
+				retryAttempts: [{ attempt: 1, attemptId: "previous-attempt", status: "failed" }],
+				attachments: [{ name: "log", path: "final.txt", contentType: "text/plain", attachmentId: "final-ref" }],
+			};
+			const second = {
+				...first,
+				executionId: "another-execution",
+				attemptId: "another-final-attempt",
+			};
+			const tests = [first, second];
+			const original = JSON.stringify(tests);
+			const output = filterPassedTestsHelper.fn(tests);
+			expect(output).toEqual(tests);
+			expect(JSON.stringify(tests)).toBe(original);
+		});
+
 		it("should filter only passed tests", () => {
 			const result = filterPassedTestsHelper.fn(mockTests);
 

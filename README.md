@@ -3840,7 +3840,3 @@ Watch for changes and regenerate docs:
 ```bash
 npm run docs:watch
 ```
-
-## Identity and lineage
-
-CTRF identity fields are preserved when reading and presenting reports: document `reportId`, logical `runId`, environment `shardId`, test `testId`/`executionId`, retry `attemptId` and attachment `attachmentId`. Existing reports without these optional fields remain supported. Display labels are independent of identity.
